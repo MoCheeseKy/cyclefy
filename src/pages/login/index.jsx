@@ -1,0 +1,129 @@
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { FaFacebook, FaGoogle, FaTwitter } from 'react-icons/fa';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+
+export default function SignIn() {
+  const router = useRouter();
+  const [form, setForm] = useState({
+    emailOrUsername: '',
+    password: '',
+    remember: false,
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    // simulasi API
+    await new Promise((res) => setTimeout(res, 1000));
+    console.log('Sign In data:', form);
+
+    setLoading(false);
+  };
+
+  return (
+    <div className='flex items-center justify-center min-h-screen bg-background'>
+      <div className='w-[970px] max-w-full flex overflow-hidden rounded-bl-[36px] rounded-tr-[36px] shadow-lg bg-background'>
+        {/* Left Panel */}
+        <div className='flex flex-col items-center justify-center w-1/2 px-12 py-12 text-background rounded-tr-[36px] bg-primary'>
+          <div className='max-w-xs text-center'>
+            <h2 className='mb-2 text-2xl font-bold'>
+              Welcome Back to Cyclefy!
+            </h2>
+            <p className='mb-6 text-sm'>Lorem Ipsum dolor sit amet.</p>
+            <p className='mb-2 text-sm'>Dont have an account? </p>
+            <Button
+              onClick={() => router.push('/register')}
+              className='w-full mb-6 bg-background text-primary'
+            >
+              Sign In
+            </Button>
+          </div>
+          <div className='flex items-center gap-3 mt-12'>
+            <div className='w-8 h-8 bg-background' />
+            <span className='text-lg font-bold text-background'>Cyclefy</span>
+          </div>
+        </div>
+
+        {/* Right Panel */}
+        <div className='flex items-center justify-center w-1/2 px-12 py-12 bg-background'>
+          <form onSubmit={handleSubmit} className='w-full max-w-md'>
+            <h1 className='mb-6 text-2xl font-bold text-text-primary'>
+              Sign In To Cyclefy
+            </h1>
+
+            <label className='block mb-2 text-sm font-semibold text-text-primary'>
+              Email Address / Username
+            </label>
+            <Input
+              name='emailOrUsername'
+              value={form.emailOrUsername}
+              onChange={handleChange}
+              placeholder='Enter your email address or username'
+              className='mb-4'
+            />
+
+            <label className='block mb-2 text-sm font-semibold text-text-primary'>
+              Password
+            </label>
+            <Input
+              type='password'
+              name='password'
+              value={form.password}
+              onChange={handleChange}
+              placeholder='Enter your password'
+              className='mb-2'
+            />
+
+            <div className='flex items-center justify-between mb-6'>
+              <label className='flex items-center gap-2 text-sm text-text-primary'>
+                <Checkbox
+                  checked={form.remember}
+                  onCheckedChange={(checked) =>
+                    setForm((prev) => ({ ...prev, remember: checked }))
+                  }
+                />
+                Remember me?
+              </label>
+              <a href='#' className='text-sm text-action hover:underline'>
+                Forgot your password?
+              </a>
+            </div>
+
+            <Button
+              type='submit'
+              className='w-full mb-6 bg-primary text-background hover:opacity-90'
+              disabled={loading}
+            >
+              {loading ? 'Loading...' : 'Sign In'}
+            </Button>
+
+            <div className='flex items-center gap-4 mb-6'>
+              <hr className='flex-1 border-t' />
+              <span className='text-sm text-text-subtle'>Or sign in with</span>
+              <hr className='flex-1 border-t' />
+            </div>
+
+            <div className='flex justify-center gap-4 text-xl text-text-primary'>
+              <FaFacebook className='cursor-pointer hover:text-action' />
+              <FaGoogle className='cursor-pointer hover:text-action' />
+              <FaTwitter className='cursor-pointer hover:text-action' />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
