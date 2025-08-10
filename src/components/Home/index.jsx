@@ -95,7 +95,7 @@ export default function Home() {
                 <div className='bg-primary h-[310px] w-[calc(100%-16px)] rounded-[12px] p-[30px] text-white flex flex-col justify-between'>
                   <div className='flex flex-col gap-[10px]'>
                     <div className='w-[70px] aspect-square rounded-full bg-white' />
-                    <p className='text-xl font-bold'>{feat}</p>
+                    <p className='text-xl font-bold'>{feat?.name}</p>
                     <p className='text-sm '>
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                       sed do eiusmod tempor incididunt ut labore et dolore magna
@@ -103,8 +103,9 @@ export default function Home() {
                     </p>
                   </div>
                   <Button
+                    onClick={() => router.push(feat?.href)}
                     className={'w-full bg-white text-black'}
-                    text={`Go To ${feat}`}
+                    text={`Go To ${feat?.name}`}
                   />
                 </div>
               </div>
@@ -157,7 +158,12 @@ export default function Home() {
   );
 }
 
-const features = ['Donation', 'Barter', 'Borrowing', 'Recycling & Repair'];
+const features = [
+  { name: 'Donation', href: '/features/donation' },
+  { name: 'Barter', href: '/features/barter' },
+  { name: 'Borrowing', href: '/features/borrowing' },
+  { name: 'Recycling & Repair', href: '/features/recycling-repair' },
+];
 const heroSlides = [
   {
     title: 'Lorem Ipsum 1',
