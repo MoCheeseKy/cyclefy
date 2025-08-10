@@ -26,7 +26,7 @@ export default function News() {
 
         {/* Search & Filters */}
         <div className='grid grid-cols-12 gap-3 mt-6'>
-          <div className='flex items-center w-full col-span-8 px-3 bg-white border border-gray-300 rounded-md'>
+          <div className='flex items-center w-full col-span-12 px-3 bg-white border border-gray-300 rounded-md md:col-span-8'>
             <Search className='w-4 h-4 text-gray-400' />
             <Input
               type='text'
@@ -36,18 +36,18 @@ export default function News() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <Button className='flex items-center justify-between col-span-2 text-white bg-primary hover:bg-gray-300'>
+          <Button className='flex items-center justify-between col-span-6 text-white md:col-span-2 bg-primary hover:bg-gray-300'>
             Filters
             <FaFilter />
           </Button>
-          <Button className='flex items-center justify-between col-span-2 text-white bg-primary hover:bg-gray-300'>
+          <Button className='flex items-center justify-between col-span-6 text-white md:col-span-2 bg-primary hover:bg-gray-300'>
             Sort by
             <FaSort />
           </Button>
         </div>
 
         {/* News Grid */}
-        <div className='w-full grid grid-cols-4 gap-[30px] mt-[30px]'>
+        <div className='w-full grid  grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-[30px] mt-[30px]'>
           {[1, 2, 3, 4, 5, 6, 7, 8]?.map((news, newsIndex) => (
             <div key={newsIndex} className='flex flex-col gap-[10px]'>
               <div className='bg-[#252525] w-full aspect-square rounded-[12px]'></div>

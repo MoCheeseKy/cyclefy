@@ -81,8 +81,8 @@ function LanguageSwitcher() {
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/features', label: 'Features' },
-  { href: '/news', label: 'News' },
-  { href: '/about-us', label: 'About Us' },
+  { href: '/#features', label: 'Features' },
+  { href: '/#news', label: 'News' },
+  { href: '/#about-us', label: 'About Us' },
   { href: '/contact', label: 'Contact' },
 ];

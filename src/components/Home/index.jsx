@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 import Wrapper from '../_shared/Wrapper';
 import Button from '../_shared/Button';
-import { Card, CardContent } from '@/components/ui/card';
 import {
   Carousel,
   CarouselContent,
@@ -12,6 +12,7 @@ import {
 import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
 
 export default function Home() {
+  const router = useRouter();
   const [api, setApi] = useState();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
@@ -38,15 +39,12 @@ export default function Home() {
                   <CarouselItem key={index}>
                     <div className='flex items-center justify-between gap-8 px-24'>
                       {' '}
-                      {/* Diberi padding agar tidak menabrak tombol */}
-                      {/* Kolom Teks */}
                       <div className='flex max-w-[350px] flex-col gap-4'>
                         <p className='text-6xl font-bold text-text-primary'>
                           {slide.title}
                         </p>
                         <p className='text-text-subtle'>{slide.description}</p>
                       </div>
-                      {/* Kolom Gambar */}
                       <div className='w-[633px] aspect-[633/480] rounded-[12px] bg-[#252525]' />
                     </div>
                   </CarouselItem>
@@ -83,12 +81,12 @@ export default function Home() {
             ))}
           </div>
         </Wrapper>
-        <Wrapper className={'flex flex-col items-center mt-20'}>
+        <Wrapper id={'features'} className={'flex flex-col items-center mt-20'}>
           <p className='font-bold text-[30px] mb-2'>Key Features</p>
           <p className='text-lg'>
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
           </p>
-          <div className='w-full grid grid-cols-3 gap-[30px] mt-[30px]'>
+          <div className='w-full grid grid-cols-2 gap-[30px] mt-[30px]'>
             {features?.map((feat, featIndex) => (
               <div
                 key={featIndex}
@@ -113,7 +111,7 @@ export default function Home() {
             ))}
           </div>
         </Wrapper>
-        <Wrapper className={'flex flex-col items-center mt-20'}>
+        <Wrapper id={'news'} className={'flex flex-col items-center mt-20'}>
           <p className='font-bold text-[30px] mb-2'>Latest News</p>
           <p className='text-lg'>
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -128,12 +126,13 @@ export default function Home() {
             ))}
           </div>
           <Button
+            onClick={() => router.push('/news/discover')}
             className={'mt-4 text-white'}
             text={'View All News'}
             endIcon={<IoIosArrowForward />}
           />
         </Wrapper>
-        <Wrapper className={'flex gap-24 items-center mt-20'}>
+        <Wrapper id={'about-us'} className={'flex gap-24 items-center mt-20'}>
           <div className='min-w-[514px] h-[462px] rounded-[12px] bg-[#252525]' />
           <div className='flex flex-col gap-[30px]'>
             <p className='text-[30px] font-bold'>About Cyclefy</p>
