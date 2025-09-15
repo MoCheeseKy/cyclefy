@@ -3,9 +3,13 @@ import { useRouter } from 'next/router';
 import { FaFacebook, FaGoogle, FaTwitter } from 'react-icons/fa';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+
+import axios from 'axios';
 
 export default function SignUp() {
   const router = useRouter();
+  const { toast } = useToast();
   const [form, setForm] = useState({
     username: '',
     email: '',
@@ -26,18 +30,48 @@ export default function SignUp() {
     e.preventDefault();
     setLoading(true);
 
-    // Validasi sederhana
     if (form.password !== form.confirmPassword) {
-      alert('Passwords do not match!');
+      toast({
+        variant: 'destructive',
+        title: 'Password tidak cocok ❌',
+        description: 'Pastikan password dan konfirmasi password sama.',
+      });
       setLoading(false);
       return;
     }
 
-    // simulasi API
-    await new Promise((res) => setTimeout(res, 1000));
-    console.log('Sign Up data:', form);
+    axios
+      .post(`${process.env.NEXT_PUBLIC_HOST}/users/register`, {
+        username: form.username,
+        email: form.email,
+        password: form.password,
+        confirmPassword: form.confirmPassword,
+      })
+      .then((response) => {
+        console.log('Registration successful:', response.data);
+        console.log('Sign Up data:', form);
 
-    setLoading(false);
+        toast({
+          title: 'Registrasi berhasil 🎉',
+          description: 'Akun kamu sudah dibuat. Silakan login.',
+        });
+
+        router.push('/login');
+      })
+      .catch((error) => {
+        console.error('Registration failed:', error);
+
+        toast({
+          variant: 'destructive',
+          title: 'Registrasi gagal ❌',
+          description:
+            error.response?.data?.message ||
+            'Terjadi kesalahan. Silakan coba lagi.',
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (

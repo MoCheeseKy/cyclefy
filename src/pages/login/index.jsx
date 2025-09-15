@@ -4,11 +4,15 @@ import { FaFacebook, FaGoogle, FaTwitter } from 'react-icons/fa';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useToast } from '@/hooks/use-toast';
+
+import axios from 'axios';
 
 export default function SignIn() {
   const router = useRouter();
+  const { toast } = useToast();
   const [form, setForm] = useState({
-    emailOrUsername: '',
+    identifier: '',
     password: '',
     remember: false,
   });
@@ -26,11 +30,36 @@ export default function SignIn() {
     e.preventDefault();
     setLoading(true);
 
-    // simulasi API
-    await new Promise((res) => setTimeout(res, 1000));
-    console.log('Sign In data:', form);
+    axios
+      .post(`${process.env.NEXT_PUBLIC_HOST}/users/login`, {
+        identifier: form.identifier,
+        password: form.password,
+      })
+      .then((response) => {
+        console.log('Login successful:', response.data);
+        console.log('Sign In data:', form);
 
-    setLoading(false);
+        toast({
+          title: 'Login Berhasil 🎉',
+          description: 'Selamat datang kembali di Cyclefy!',
+        });
+
+        setLoading(false);
+        router.push('/dashboard'); // redirect misalnya
+      })
+      .catch((error) => {
+        console.error('Login failed:', error);
+
+        toast({
+          variant: 'destructive',
+          title: 'Login Gagal ❌',
+          description:
+            error.response?.data?.message ||
+            'Email atau password salah. Coba lagi.',
+        });
+
+        setLoading(false);
+      });
   };
 
   return (
@@ -68,8 +97,8 @@ export default function SignIn() {
               Email Address / Username
             </label>
             <Input
-              name='emailOrUsername'
-              value={form.emailOrUsername}
+              name='identifier'
+              value={form.identifier}
               onChange={handleChange}
               placeholder='Enter your email address or username'
               className='mb-4'

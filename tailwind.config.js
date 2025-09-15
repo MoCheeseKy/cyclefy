@@ -20,8 +20,8 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)',
       },
       colors: {
-        'primary': '#0A6847', // Evergreen Teal
-        'secondary': '#F3A63B', // Marigold Orange
+        'primary': '#1E3B20', // Evergreen Teal
+        'secondary': '#3C7140', // Marigold Orange
         'action': '#3E83C5', // Recycle Blue
         'background': '#F7F6F3', // Linen White
         'text-primary': '#3D4043', // Charcoal Gray
