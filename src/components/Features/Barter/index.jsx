@@ -31,7 +31,7 @@ export default function Barter() {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
             </div>
-            <Link href='/features/barter/post-item'>
+            <Link href='/features/post-item/barter'>
               <button className='bg-white text-primary rounded-[16px] px-[20px] py-[10px] min-w-[131px]'>
                 View More
               </button>
