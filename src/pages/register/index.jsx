@@ -41,7 +41,7 @@ export default function SignUp() {
     }
 
     axios
-      .post(`${process.env.NEXT_PUBLIC_HOST}/users/register`, {
+      .post(`${process.env.NEXT_PUBLIC_HOST}/register`, {
         username: form.username,
         email: form.email,
         password: form.password,

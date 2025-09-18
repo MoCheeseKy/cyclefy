@@ -36,28 +36,25 @@ export default function SignIn() {
         password: form.password,
       })
       .then((response) => {
-        console.log('Login successful:', response.data);
-        console.log('Sign In data:', form);
-
+        localStorage.setItem('cyclefy_user_token', response?.data?.token);
+        localStorage.setItem(
+          'cyclefy_user_data',
+          JSON.stringify(response?.data?.data)
+        );
         toast({
-          title: 'Login Berhasil 🎉',
-          description: 'Selamat datang kembali di Cyclefy!',
+          title: 'Success',
+          description: response?.data?.message || 'Login successful!',
         });
-
         setLoading(false);
-        router.push('/dashboard'); // redirect misalnya
+        router.push('/');
       })
       .catch((error) => {
-        console.error('Login failed:', error);
-
         toast({
           variant: 'destructive',
-          title: 'Login Gagal ❌',
+          title: 'Failed',
           description:
-            error.response?.data?.message ||
-            'Email atau password salah. Coba lagi.',
+            error?.data?.message || 'Email atau password salah. Coba lagi.',
         });
-
         setLoading(false);
       });
   };
