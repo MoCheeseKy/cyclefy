@@ -51,7 +51,7 @@ export default function Borrowing() {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
             </div>
-            <Link href='/features/borrowing/search-items'>
+            <Link href='/features/discover/borrowing'>
               <button className='bg-white text-primary rounded-[16px] px-[20px] py-[10px] min-w-[131px]'>
                 View More
               </button>
