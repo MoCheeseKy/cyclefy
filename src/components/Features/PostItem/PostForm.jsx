@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import { format } from 'date-fns';
 
 // Import komponen dari Shadcn/UI
 import { Button } from '@/components/ui/button';
@@ -16,9 +17,15 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 // Import ikon dari Lucide React
-import { UploadCloud, X, Loader2 } from 'lucide-react';
+import { UploadCloud, X, Loader2, CalendarIcon } from 'lucide-react';
 
 // Fungsi helper untuk mendapatkan judul dan teks tombol yang dinamis
 const getPostTypeDetails = (type) => {
@@ -55,6 +62,8 @@ export default function PostForm() {
   const [phoneId, setPhoneId] = useState('');
   const [images, setImages] = useState([]);
   const [agree, setAgree] = useState(false);
+  const [durationFrom, setDurationFrom] = useState(undefined);
+  const [durationTo, setDurationTo] = useState(undefined);
 
   // State untuk loading dan error
   const [isLoading, setIsLoading] = useState(false);
@@ -62,6 +71,9 @@ export default function PostForm() {
 
   // Mengambil data untuk dropdown (kategori, alamat, telepon) saat komponen dimuat
   useEffect(() => {
+    // Pastikan router sudah siap sebelum fetch data
+    if (!router.isReady) return;
+
     const fetchData = async () => {
       const token = localStorage.getItem('cyclefy_user_token');
       if (!token) {
@@ -79,9 +91,7 @@ export default function PostForm() {
 
       try {
         const [categoryRes, addressRes, phoneRes] = await Promise.all([
-          axios.get(`${process.env.NEXT_PUBLIC_HOST}/categories`, {
-            headers,
-          }),
+          axios.get(`${process.env.NEXT_PUBLIC_HOST}/categories`, { headers }),
           axios.get(`${process.env.NEXT_PUBLIC_HOST}/users/current/addresses`, {
             headers,
           }),
@@ -104,7 +114,7 @@ export default function PostForm() {
     };
 
     fetchData();
-  }, [toast]);
+  }, [router.isReady, toast]); // Tambahkan router.isReady sebagai dependensi
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -143,6 +153,19 @@ export default function PostForm() {
     setImages(images.filter((_, i) => i !== index));
   };
 
+  const resetForm = () => {
+    setItemName('');
+    setDescription('');
+    setCategoryId('');
+    setAddressId('');
+    setPhoneId('');
+    setImages([]);
+    setAgree(false);
+    setDurationFrom(undefined);
+    setDurationTo(undefined);
+    setErrors({});
+  };
+
   const validateForm = () => {
     const newErrors = {};
     if (!itemName) newErrors.itemName = 'Item name is required.';
@@ -153,6 +176,15 @@ export default function PostForm() {
     if (images.length === 0)
       newErrors.images = 'At least one image is required.';
     if (!agree) newErrors.agree = 'You must agree to the terms of service.';
+
+    if (post_type === 'borrowing') {
+      if (!durationFrom) newErrors.durationFrom = 'Start date is required.';
+      if (!durationTo) newErrors.durationTo = 'End date is required.';
+      if (durationFrom && durationTo && durationTo < durationFrom) {
+        newErrors.durationTo = 'End date cannot be before start date.';
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -179,6 +211,13 @@ export default function PostForm() {
     images.forEach((image) => {
       formData.append('images', image);
     });
+
+    if (post_type === 'borrowing') {
+      if (durationFrom)
+        formData.append('duration_from', format(durationFrom, 'yyyy-MM-dd'));
+      if (durationTo)
+        formData.append('duration_to', format(durationTo, 'yyyy-MM-dd'));
+    }
 
     const apiEndpoints = {
       donate: `${process.env.NEXT_PUBLIC_HOST}/donations`,
@@ -210,7 +249,7 @@ export default function PostForm() {
         title: 'Success!',
         description: 'Your item has been posted successfully.',
       });
-      router.push('/'); // Redirect to homepage or another page on success
+      resetForm();
     } catch (error) {
       console.error('Submission failed:', error);
       const errorMessage =
@@ -224,6 +263,15 @@ export default function PostForm() {
       setIsLoading(false);
     }
   };
+
+  if (!router.isReady) {
+    return (
+      <div className='flex items-center justify-center w-full max-w-[530px] h-fit bg-white rounded-[16px] p-6 shadow-md'>
+        <Loader2 className='w-6 h-6 animate-spin' />
+        <span className='ml-2'>Loading form...</span>
+      </div>
+    );
+  }
 
   const { title, buttonText } = getPostTypeDetails(post_type);
 
@@ -313,6 +361,78 @@ export default function PostForm() {
             <p className='mt-1 text-sm text-red-500'>{errors.phoneId}</p>
           )}
         </div>
+
+        {post_type === 'borrowing' && (
+          <div>
+            <Label>Duration</Label>
+            <div className='grid grid-cols-2 gap-4 mt-1'>
+              <div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={'outline'}
+                      className={`w-full justify-start text-left font-normal ${
+                        !durationFrom && 'text-muted-foreground'
+                      }`}
+                    >
+                      <CalendarIcon className='w-4 h-4 mr-2' />
+                      {durationFrom ? (
+                        format(durationFrom, 'dd/MM/yyyy')
+                      ) : (
+                        <span>From</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-auto p-0'>
+                    <Calendar
+                      mode='single'
+                      selected={durationFrom}
+                      onSelect={setDurationFrom}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                {errors.durationFrom && (
+                  <p className='mt-1 text-sm text-red-500'>
+                    {errors.durationFrom}
+                  </p>
+                )}
+              </div>
+              <div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={'outline'}
+                      className={`w-full justify-start text-left font-normal ${
+                        !durationTo && 'text-muted-foreground'
+                      }`}
+                    >
+                      <CalendarIcon className='w-4 h-4 mr-2' />
+                      {durationTo ? (
+                        format(durationTo, 'dd/MM/yyyy')
+                      ) : (
+                        <span>To</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-auto p-0'>
+                    <Calendar
+                      mode='single'
+                      selected={durationTo}
+                      onSelect={setDurationTo}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                {errors.durationTo && (
+                  <p className='mt-1 text-sm text-red-500'>
+                    {errors.durationTo}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         <div>
           <Label htmlFor='upload-image'>Upload Image</Label>
