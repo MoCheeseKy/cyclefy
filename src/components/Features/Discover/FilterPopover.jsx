@@ -1,54 +1,209 @@
 import { useState, useEffect } from 'react';
+import { format } from 'date-fns';
+
+// Import komponen UI
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Filter as FilterIcon } from 'lucide-react';
+import { Calendar } from '@/components/ui/calendar';
+import { Filter as FilterIcon, CalendarIcon } from 'lucide-react';
 
-// Opsi statis untuk filter baru
-const staticFilterOptions = {
-  statusMyItems: [
-    'Waiting for Request',
-    'Waiting for Confirmation',
-    'Confirmed',
-    'Completed',
-    'Failed',
-  ],
-  statusOthersItems: ['Request Submitted', 'Confirmed', 'Completed', 'Failed'],
-  ownership: ['My Items', "Other's Item"],
+// Sub-komponen untuk filter Borrowing (Lengkap)
+const BorrowingFilters = ({ localFilters, setLocalFilters, categories }) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setLocalFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleDateChange = (date, fieldName) => {
+    setLocalFilters((prev) => ({ ...prev, [fieldName]: date }));
+  };
+
+  const handleCategoryChange = (checked, categoryName) => {
+    setLocalFilters((prevFilters) => {
+      const currentCategories = prevFilters.categories || [];
+      const newCategories = checked
+        ? [...currentCategories, categoryName]
+        : currentCategories.filter((item) => item !== categoryName);
+      return { ...prevFilters, categories: newCategories };
+    });
+  };
+
+  return (
+    <div className='grid grid-cols-3 gap-6'>
+      {/* Kolom 1: Category */}
+      <div className='space-y-2'>
+        <h4 className='font-bold'>Category</h4>
+        {categories.map((cat) => (
+          <div key={cat.id} className='flex items-center space-x-2'>
+            <Checkbox
+              id={`cat-borrow-${cat.id}`}
+              checked={localFilters.categories?.includes(cat.name)}
+              onCheckedChange={(checked) =>
+                handleCategoryChange(checked, cat.name)
+              }
+            />
+            <Label
+              htmlFor={`cat-borrow-${cat.id}`}
+              className='text-sm font-normal'
+            >
+              {cat.name}
+            </Label>
+          </div>
+        ))}
+      </div>
+
+      {/* Kolom 2: Borrowing Duration */}
+      <div className='space-y-2'>
+        <h4 className='font-bold'>Borrowing Duration</h4>
+        <div>
+          <Label className='text-xs'>From:</Label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={'outline'}
+                className={`w-full justify-start text-left font-normal mt-1 ${
+                  !localFilters.from && 'text-muted-foreground'
+                }`}
+              >
+                <CalendarIcon className='w-4 h-4 mr-2' />
+                {localFilters.from ? (
+                  format(localFilters.from, 'dd/MM/yyyy')
+                ) : (
+                  <span>dd/mm/yyyy</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className='w-auto p-0'>
+              <Calendar
+                mode='single'
+                selected={localFilters.from}
+                onSelect={(date) => handleDateChange(date, 'from')}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+        <div>
+          <Label className='text-xs'>To:</Label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={'outline'}
+                className={`w-full justify-start text-left font-normal mt-1 ${
+                  !localFilters.to && 'text-muted-foreground'
+                }`}
+              >
+                <CalendarIcon className='w-4 h-4 mr-2' />
+                {localFilters.to ? (
+                  format(localFilters.to, 'dd/MM/yyyy')
+                ) : (
+                  <span>dd/mm/yyyy</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className='w-auto p-0'>
+              <Calendar
+                mode='single'
+                selected={localFilters.to}
+                onSelect={(date) => handleDateChange(date, 'to')}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+        <div className='text-xs text-center'>OR</div>
+        <div>
+          <Label className='text-xs'>Number of Days:</Label>
+          <Input
+            name='days'
+            placeholder='e.g., 7'
+            value={localFilters.days || ''}
+            onChange={handleInputChange}
+          />
+        </div>
+      </div>
+
+      {/* Kolom 3: Location */}
+      <div className='space-y-2'>
+        <h4 className='font-bold'>Location</h4>
+        <div>
+          <Label className='text-xs'>Maximum Distance:</Label>
+          <Input
+            name='maxDistance'
+            placeholder='e.g., 5 (in km)'
+            value={localFilters.maxDistance || ''}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className='text-xs text-center'>OR</div>
+        <div>
+          <Label className='text-xs'>Enter Location:</Label>
+          <Input
+            name='location'
+            placeholder='e.g., Bandung'
+            value={localFilters.location || ''}
+            onChange={handleInputChange}
+          />
+        </div>
+      </div>
+    </div>
+  );
 };
 
-// Menerima 'filters' saat ini, daftar kategori, dan fungsi onApplyFilters
+// Sub-komponen untuk filter Barter (Hanya Kategori)
+const BarterFilters = ({ localFilters, setLocalFilters, categories }) => {
+  const handleCategoryChange = (checked, categoryName) => {
+    setLocalFilters((prevFilters) => {
+      const currentCategories = prevFilters.categories || [];
+      const newCategories = checked
+        ? [...currentCategories, categoryName]
+        : currentCategories.filter((item) => item !== categoryName);
+      return { ...prevFilters, categories: newCategories };
+    });
+  };
+
+  return (
+    <div className='grid grid-cols-1 w-[200px]'>
+      <div className='space-y-2'>
+        <h4 className='font-bold'>Category</h4>
+        {categories.map((cat) => (
+          <div key={cat.id} className='flex items-center space-x-2'>
+            <Checkbox
+              id={`cat-barter-${cat.id}`}
+              checked={localFilters.categories?.includes(cat.name)}
+              onCheckedChange={(checked) =>
+                handleCategoryChange(checked, cat.name)
+              }
+            />
+            <Label
+              htmlFor={`cat-barter-${cat.id}`}
+              className='text-sm font-normal'
+            >
+              {cat.name}
+            </Label>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export default function FilterPopover({
+  discover_type,
   initialFilters,
   categories = [],
   onApplyFilters,
 }) {
-  // State lokal untuk menampung perubahan sebelum tombol "Apply" diklik
   const [localFilters, setLocalFilters] = useState(initialFilters);
 
-  // Update state lokal jika filter dari parent berubah (misalnya saat reset)
   useEffect(() => {
     setLocalFilters(initialFilters);
   }, [initialFilters]);
-
-  // Fungsi generik untuk menangani perubahan pada checkbox
-  const handleCheckboxChange = (group, value, isChecked) => {
-    setLocalFilters((prevFilters) => {
-      const currentGroupValues = prevFilters[group] || [];
-      let newGroupValues;
-
-      if (isChecked) {
-        newGroupValues = [...currentGroupValues, value];
-      } else {
-        newGroupValues = currentGroupValues.filter((item) => item !== value);
-      }
-      return { ...prevFilters, [group]: newGroupValues };
-    });
-  };
 
   const handleApply = () => {
     onApplyFilters(localFilters);
@@ -57,12 +212,14 @@ export default function FilterPopover({
   const handleReset = () => {
     const defaultFilters = {
       categories: [],
-      statusMyItems: [],
-      statusOthersItems: [],
-      ownership: [],
+      maxDistance: '',
+      location: '',
+      from: undefined,
+      to: undefined,
+      days: '',
     };
     setLocalFilters(defaultFilters);
-    onApplyFilters(defaultFilters); // Langsung terapkan reset ke parent
+    onApplyFilters(defaultFilters);
   };
 
   return (
@@ -77,85 +234,20 @@ export default function FilterPopover({
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-auto p-6' align='end'>
-        <div className='grid grid-cols-2 gap-8 md:grid-cols-4'>
-          {/* Category */}
-          <div className='space-y-2'>
-            <h4 className='font-medium leading-none'>Category</h4>
-            {categories.map((cat) => (
-              <div key={cat.id} className='flex items-center space-x-2'>
-                <Checkbox
-                  id={`cat-${cat.id}`}
-                  checked={localFilters.categories.includes(cat.name)}
-                  onCheckedChange={(checked) =>
-                    handleCheckboxChange('categories', cat.name, checked)
-                  }
-                />
-                <label htmlFor={`cat-${cat.id}`} className='text-sm'>
-                  {cat.name}
-                </label>
-              </div>
-            ))}
-          </div>
+        {discover_type === 'borrowing' ? (
+          <BorrowingFilters
+            localFilters={localFilters}
+            setLocalFilters={setLocalFilters}
+            categories={categories}
+          />
+        ) : (
+          <BarterFilters
+            localFilters={localFilters}
+            setLocalFilters={setLocalFilters}
+            categories={categories}
+          />
+        )}
 
-          {/* Status (My Items) */}
-          <div className='space-y-2'>
-            <h4 className='font-medium leading-none'>Status (My Items)</h4>
-            {staticFilterOptions.statusMyItems.map((status) => (
-              <div key={status} className='flex items-center space-x-2'>
-                <Checkbox
-                  id={`my-${status}`}
-                  checked={localFilters.statusMyItems.includes(status)}
-                  onCheckedChange={(checked) =>
-                    handleCheckboxChange('statusMyItems', status, checked)
-                  }
-                />
-                <label htmlFor={`my-${status}`} className='text-sm'>
-                  {status}
-                </label>
-              </div>
-            ))}
-          </div>
-
-          {/* Status (Other's Items) */}
-          <div className='space-y-2'>
-            <h4 className='font-medium leading-none'>
-              Status (Other{"'"}s Items)
-            </h4>
-            {staticFilterOptions.statusOthersItems.map((status) => (
-              <div key={status} className='flex items-center space-x-2'>
-                <Checkbox
-                  id={`other-${status}`}
-                  checked={localFilters.statusOthersItems.includes(status)}
-                  onCheckedChange={(checked) =>
-                    handleCheckboxChange('statusOthersItems', status, checked)
-                  }
-                />
-                <label htmlFor={`other-${status}`} className='text-sm'>
-                  {status}
-                </label>
-              </div>
-            ))}
-          </div>
-
-          {/* Ownership */}
-          <div className='space-y-2'>
-            <h4 className='font-medium leading-none'>Ownership</h4>
-            {staticFilterOptions.ownership.map((owner) => (
-              <div key={owner} className='flex items-center space-x-2'>
-                <Checkbox
-                  id={`owner-${owner}`}
-                  checked={localFilters.ownership.includes(owner)}
-                  onCheckedChange={(checked) =>
-                    handleCheckboxChange('ownership', owner, checked)
-                  }
-                />
-                <label htmlFor={`owner-${owner}`} className='text-sm'>
-                  {owner}
-                </label>
-              </div>
-            ))}
-          </div>
-        </div>
         <div className='flex justify-end gap-4 mt-6'>
           <Button variant='ghost' onClick={handleReset}>
             Reset Filters

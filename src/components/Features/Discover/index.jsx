@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
+import { format } from 'date-fns';
 
 import Wrapper from '@/components/_shared/Wrapper';
 import ItemCard from './ItemCard';
@@ -26,16 +27,12 @@ import {
 } from '@/components/ui/select';
 import { ChevronRight, ArrowUpDown } from 'lucide-react';
 
-// State default untuk filter agar mudah di-reset
 const defaultFilters = {
   categories: [],
-  statusMyItems: [],
-  statusOthersItems: [],
-  ownership: [],
   maxDistance: '',
   location: '',
-  from: '',
-  to: '',
+  from: undefined,
+  to: undefined,
   days: '',
 };
 
@@ -54,8 +51,6 @@ export default function Discover() {
   const [sortBy, setSortBy] = useState('relevance');
   const [page, setPage] = useState(1);
   const [categories, setCategories] = useState([]);
-
-  // State terpusat untuk semua filter
   const [filters, setFilters] = useState(defaultFilters);
 
   useEffect(() => {
@@ -79,19 +74,30 @@ export default function Discover() {
     const endpoint = discover_type === 'borrowing' ? '/borrows' : '/barters';
     const baseUrl = process.env.NEXT_PUBLIC_HOST;
 
-    // Menyiapkan semua parameter payload sesuai spesifikasi baru
-    const params = {
+    // Siapkan parameter dasar yang ada di semua tipe
+    let params = {
       page,
       size: 10,
       search: searchTerm || undefined,
       sortBy,
       category: filters.categories.join(',') || undefined,
-      maxDistance: filters.maxDistance || undefined,
-      location: filters.maxDistance ? undefined : filters.location || undefined, // Abaikan location jika maxDistance diisi
-      from: filters.from || undefined,
-      to: filters.to || undefined,
-      days: filters.from || filters.to ? undefined : filters.days || undefined, // Abaikan days jika from/to diisi
     };
+
+    // Tambahkan parameter khusus hanya untuk 'borrowing'
+    if (discover_type === 'borrowing') {
+      params = {
+        ...params,
+        maxDistance: filters.maxDistance || undefined,
+        location: filters.maxDistance
+          ? undefined
+          : filters.location || undefined,
+        from: filters.from ? format(filters.from, 'yyyy-MM-dd') : undefined,
+        to: filters.to ? format(filters.to, 'yyyy-MM-dd') : undefined,
+        days:
+          filters.from || filters.to ? undefined : filters.days || undefined,
+      };
+    }
+    // Untuk 'barter', 'params' dasar sudah cukup.
 
     try {
       const response = await axios.get(`${baseUrl}${endpoint}`, {
@@ -185,13 +191,14 @@ export default function Discover() {
               />
               <Button
                 onClick={handleSearch}
-                className='text-white bg-green-800 rounded-l-none hover:bg-green-700'
+                className='bg-green-800 rounded-l-none hover:bg-green-700'
               >
                 Search
               </Button>
             </div>
             <div className='flex gap-4'>
               <FilterPopover
+                discover_type={discover_type}
                 initialFilters={filters}
                 categories={categories}
                 onApplyFilters={applyFilters}
@@ -211,11 +218,9 @@ export default function Discover() {
                   <SelectItem value='relevance'>Relevance</SelectItem>
                   <SelectItem value='newest'>Newest</SelectItem>
                   <SelectItem value='nearest'>Nearest</SelectItem>
-                  {discover_type === 'borrowing' && (
-                    <SelectItem value='borrowing_duration'>
-                      Borrowing Duration
-                    </SelectItem>
-                  )}
+                  <SelectItem value='borrowing_duration'>
+                    Borrowing Duration
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
