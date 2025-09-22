@@ -74,7 +74,6 @@ export default function Discover() {
     const endpoint = discover_type === 'borrowing' ? '/borrows' : '/barters';
     const baseUrl = process.env.NEXT_PUBLIC_HOST;
 
-    // Siapkan parameter dasar yang ada di semua tipe
     let params = {
       page,
       size: 10,
@@ -83,7 +82,6 @@ export default function Discover() {
       category: filters.categories.join(',') || undefined,
     };
 
-    // Tambahkan parameter khusus hanya untuk 'borrowing'
     if (discover_type === 'borrowing') {
       params = {
         ...params,
@@ -231,7 +229,13 @@ export default function Discover() {
             {isLoading ? (
               <p className='col-span-full'>Loading...</p>
             ) : items.length > 0 ? (
-              items.map((item) => <ItemCard key={item.id} item={item} />)
+              items.map((item) => (
+                <ItemCard
+                  key={item.id}
+                  item={item}
+                  discover_type={discover_type}
+                />
+              ))
             ) : (
               <p className='col-span-full'>No items found.</p>
             )}
