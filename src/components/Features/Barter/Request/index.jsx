@@ -205,14 +205,14 @@ export default function RequestBarterPage() {
                   <b>To post a new form:</b> Manually enter item details.
                 </li>
                 <li>
-                  <b>Use existing item:</b> Select from items you've previously
-                  posted.
+                  <b>Use existing item:</b> Select from items you{"'"}ve
+                  previously posted.
                 </li>
               </ul>
             </Step>
             <Step number='3' title='Submit & Confirm'>
-              Tap Send Request. The item owner will be notified. If they're
-              interested in your offer, you'll be contacted to arrange the
+              Tap Send Request. The item owner will be notified. If they{"'"}re
+              interested in your offer, you{"'"}ll be contacted to arrange the
               exchange.
             </Step>
           </div>
