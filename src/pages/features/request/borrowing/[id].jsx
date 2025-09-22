@@ -1,10 +1,10 @@
 import Layout from '@/layouts';
-import RequestBarter from '@/components/Features/Barter/Request';
+import RequestBorrow from '@/components/Features/Borrowing/Request';
 
 export default function RequestBorrowPage() {
   return (
     <Layout>
-      <RequestBarter />
+      <RequestBorrow />
     </Layout>
   );
 }
