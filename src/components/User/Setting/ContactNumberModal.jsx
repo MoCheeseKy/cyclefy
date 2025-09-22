@@ -1,6 +1,7 @@
-'use client';
-
 import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -9,8 +10,6 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 export default function ContactNumberModal({
   isOpen,
@@ -18,46 +17,59 @@ export default function ContactNumberModal({
   onSave,
   initialValue,
 }) {
-  const [contactNumber, setContactNumber] = useState('');
+  const [number, setNumber] = useState('');
 
   useEffect(() => {
-    if (isOpen) {
-      setContactNumber(initialValue || '');
+    // Mengisi input dengan data yang ada saat mode edit
+    if (initialValue) {
+      setNumber(initialValue.number || '');
+    } else {
+      // Mengosongkan input saat mode tambah baru
+      setNumber('');
     }
-  }, [isOpen, initialValue]);
+  }, [initialValue]);
 
   const handleSave = () => {
-    onSave(contactNumber);
-    onClose();
+    // Mengirim data dalam format objek kembali ke parent
+    onSave({ number });
+    onClose(); // Tutup modal setelah menyimpan
   };
+
+  // Jangan render apa-apa jika modal tidak terbuka
+  if (!isOpen) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className='bg-[#D9D9D9] w-[584px]'>
+      <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
-          <DialogTitle>Contact Number</DialogTitle>
-          <DialogDescription>Lorem ipsum dolor sit amet</DialogDescription>
+          <DialogTitle>
+            {initialValue?.id
+              ? 'Edit Contact Number'
+              : 'Add New Contact Number'}
+          </DialogTitle>
+          <DialogDescription>
+            Enter your phone number to help others reach you.
+          </DialogDescription>
         </DialogHeader>
-
-        <div className='space-y-2'>
-          <label className='text-sm font-medium'>Contact Number</label>
-          <Input
-            value={contactNumber}
-            onChange={(e) => setContactNumber(e.target.value)}
-            placeholder='Enter your contact number'
-          />
+        <div className='py-4 space-y-4'>
+          <div>
+            <Label htmlFor='contact-number' className='text-right'>
+              Number
+            </Label>
+            <Input
+              id='contact-number'
+              value={number}
+              onChange={(e) => setNumber(e.target.value)}
+              className='col-span-3'
+              placeholder='+6281234567890'
+            />
+          </div>
         </div>
-
-        <DialogFooter className='flex justify-end gap-2 mt-4 text-white'>
-          <Button
-            className='w-full bg-status-error hover:bg-status-error'
-            onClick={onClose}
-          >
+        <DialogFooter>
+          <Button variant='outline' onClick={onClose}>
             Cancel
           </Button>
-          <Button className='w-full' onClick={handleSave}>
-            Save
-          </Button>
+          <Button onClick={handleSave}>Save</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

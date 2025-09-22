@@ -26,8 +26,10 @@ export default function PasswordModal({ isOpen, onClose, onSave }) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className='bg-[#D9D9D9] w-[584px]'>
         <DialogHeader>
-          <DialogTitle>Password</DialogTitle>
-          <DialogDescription>Lorem ipsum dolor sit amet</DialogDescription>
+          <DialogTitle className={'text-center w-full'}>Password</DialogTitle>
+          <DialogDescription className={'text-center w-full'}>
+            Lorem ipsum dolor sit amet
+          </DialogDescription>
         </DialogHeader>
 
         <div className='space-y-2'>

@@ -35,8 +35,10 @@ export default function FullNameModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className='bg-[#D9D9D9] w-[584px]'>
         <DialogHeader>
-          <DialogTitle>Full Name</DialogTitle>
-          <DialogDescription>Lorem ipsum dolor sit amet</DialogDescription>
+          <DialogTitle className={'text-center w-full'}>Full Name</DialogTitle>
+          <DialogDescription className={'text-center w-full'}>
+            Lorem ipsum dolor sit amet
+          </DialogDescription>
         </DialogHeader>
 
         <div className='space-y-2'>
