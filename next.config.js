@@ -15,10 +15,15 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
-      // ▼▼▼ Tambahkan blok ini ▼▼▼
       {
         protocol: 'https',
         hostname: 'dummyimage.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
         port: '',
         pathname: '/**',
       },

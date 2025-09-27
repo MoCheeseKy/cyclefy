@@ -1,18 +1,87 @@
+// pages/news/index.jsx (atau path yang sesuai)
+
+import { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
 import Wrapper from '../_shared/Wrapper';
-import { useState } from 'react';
+import NewsCard from './NewsCard'; // Sesuaikan path jika perlu
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
-
-import { FaFilter, FaSort } from 'react-icons/fa';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
+import { Search, Loader2, ArrowUpDown } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function News() {
+  const { toast } = useToast();
+  const [newsList, setNewsList] = useState([]);
+  const [meta, setMeta] = useState({ page: 1, totalPages: 1 });
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [inputValue, setInputValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [orderBy, setOrderBy] = useState('newest');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    const token = localStorage.getItem('cyclefy_user_token');
+
+    const params = {
+      page: currentPage,
+      size: 12,
+      search: searchTerm || undefined,
+      orderBy,
+    };
+
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/news`, {
+        headers: { Authorization: `Bearer ${token}` },
+        params,
+      });
+      setNewsList(response.data.data || []);
+      setMeta(response.data.meta || { page: 1, totalPages: 1 });
+    } catch (error) {
+      console.error('Failed to fetch news:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Failed to Load News',
+        description: 'Could not fetch news from the server.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage, searchTerm, orderBy, toast]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const handleSearch = () => {
+    setCurrentPage(1);
+    setSearchTerm(inputValue);
+  };
+
+  const handleSortChange = (value) => {
+    setCurrentPage(1);
+    setOrderBy(value);
+  };
 
   return (
-    <div className='flex justify-center py-20'>
+    <div className='flex justify-center py-20 bg-gray-50'>
       <Wrapper>
-        {/* Header */}
         <div className='flex flex-col gap-2'>
           <div className='flex items-center gap-3'>
             <div className='w-[60px] h-[60px] bg-[#252525] rounded-full'></div>
@@ -24,68 +93,89 @@ export default function News() {
           </p>
         </div>
 
-        {/* Search & Filters */}
-        <div className='grid grid-cols-12 gap-3 mt-6'>
-          <div className='flex items-center w-full col-span-12 px-3 bg-white border border-gray-300 rounded-md md:col-span-8'>
-            <Search className='w-4 h-4 text-gray-400' />
+        <div className='flex flex-col gap-4 mt-8 sm:flex-row'>
+          <div className='flex items-center flex-grow'>
             <Input
               type='text'
-              placeholder='Search for items...'
-              className='w-full border-0 focus-visible:ring-0'
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder='Search by news title...'
+              className='h-12 text-base rounded-r-none focus-visible:ring-0 focus-visible:ring-offset-0'
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             />
-          </div>
-          <Button className='flex items-center justify-between col-span-6 text-white md:col-span-2 bg-primary hover:bg-gray-300'>
-            Filters
-            <FaFilter />
-          </Button>
-          <Button className='flex items-center justify-between col-span-6 text-white md:col-span-2 bg-primary hover:bg-gray-300'>
-            Sort by
-            <FaSort />
-          </Button>
-        </div>
-
-        {/* News Grid */}
-        <div className='w-full grid  grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-[30px] mt-[30px]'>
-          {[1, 2, 3, 4, 5, 6, 7, 8]?.map((news, newsIndex) => (
-            <div key={newsIndex} className='flex flex-col gap-[10px]'>
-              <div className='bg-[#252525] w-full aspect-square rounded-[12px]'></div>
-              <p className='text-lg'>Lorem Ipsum dulu {news}</p>
-              <p className='text-xs font-light'>by Lorem • July 15, 2025</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Pagination */}
-        <div className='flex items-center justify-center gap-2 mt-8'>
-          <Button
-            variant='secondary'
-            className='w-8 h-8 bg-gray-200 rounded-full hover:bg-gray-300'
-          >
-            {'<'}
-          </Button>
-          {[1, 2, 3, 4, 5]?.map((page) => (
-            <Button
-              key={page}
-              variant={page === 1 ? 'default' : 'secondary'}
-              className={`w-8 h-8 rounded-full ${
-                page === 1
-                  ? 'bg-gray-800 text-white'
-                  : 'bg-gray-200 hover:bg-gray-300'
-              }`}
-            >
-              {page}
+            <Button onClick={handleSearch} className='h-12 rounded-l-none'>
+              <Search className='w-5 h-5 mr-2 sm:hidden' />
+              <span className='hidden sm:inline'>Search</span>
             </Button>
-          ))}
-          <span className='text-gray-500'>... 11</span>
-          <Button
-            variant='secondary'
-            className='w-8 h-8 bg-gray-200 rounded-full hover:bg-gray-300'
-          >
-            {'>'}
-          </Button>
+          </div>
+          <Select onValueChange={handleSortChange} defaultValue={orderBy}>
+            <SelectTrigger className='w-full sm:w-[180px] h-12 text-base'>
+              <ArrowUpDown className='w-4 h-4 mr-2' />
+              <SelectValue placeholder='Sort by' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='newest'>Newest</SelectItem>
+              <SelectItem value='oldest'>Oldest</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
+
+        <div className='w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8 min-h-[500px]'>
+          {isLoading ? (
+            <div className='flex items-center justify-center col-span-full'>
+              <Loader2 className='w-10 h-10 text-gray-400 animate-spin' />
+            </div>
+          ) : newsList.length > 0 ? (
+            newsList.map((news) => <NewsCard key={news.id} news={news} />)
+          ) : (
+            <div className='text-center text-gray-500 col-span-full'>
+              <p>No news found. Try a different search term.</p>
+            </div>
+          )}
+        </div>
+
+        {!isLoading && meta.totalPages > 1 && (
+          <div className='flex justify-center mt-10'>
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    href='#'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentPage((p) => Math.max(1, p - 1));
+                    }}
+                    disabled={currentPage === 1}
+                  />
+                </PaginationItem>
+                {[...Array(meta.totalPages)].map((_, i) => (
+                  <PaginationItem key={i}>
+                    <PaginationLink
+                      href='#'
+                      isActive={currentPage === i + 1}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage(i + 1);
+                      }}
+                    >
+                      {i + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationNext
+                    href='#'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentPage((p) => Math.min(meta.totalPages, p + 1));
+                    }}
+                    disabled={currentPage === meta.totalPages}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
       </Wrapper>
     </div>
   );
