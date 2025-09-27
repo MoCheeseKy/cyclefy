@@ -165,7 +165,12 @@ export default function Detail() {
             </div>
             <p className='mt-6 text-gray-700'>{item.description}</p>
             <div className='flex-grow'></div> {/* Spacer to push button down */}
-            <Link href={`/features/request/${requestType}/${id}`} passHref>
+            <Link
+              href={`/features/request/${
+                requestType === 'borrow' ? 'borrowing' : requestType
+              }/${id}`}
+              passHref
+            >
               <Button className='w-full h-12 mt-8 text-lg bg-green-800 hover:bg-green-700'>
                 Request This Item
               </Button>
