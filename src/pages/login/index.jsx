@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { FaFacebook, FaGoogle, FaTwitter } from 'react-icons/fa';
@@ -123,9 +124,12 @@ export default function SignIn() {
                 />
                 Remember me?
               </label>
-              <a href='#' className='text-sm text-action hover:underline'>
+              <Link
+                href='/login/forgot-password'
+                className='text-sm text-action hover:underline'
+              >
                 Forgot your password?
-              </a>
+              </Link>
             </div>
 
             <Button
