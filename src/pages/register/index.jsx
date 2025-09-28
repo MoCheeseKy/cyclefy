@@ -4,7 +4,6 @@ import { FaFacebook, FaGoogle, FaTwitter } from 'react-icons/fa';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-
 import axios from 'axios';
 
 export default function SignUp() {
@@ -40,38 +39,37 @@ export default function SignUp() {
       return;
     }
 
-    axios
-      .post(`${process.env.NEXT_PUBLIC_HOST}/register`, {
-        username: form.username,
-        email: form.email,
-        password: form.password,
-        confirmPassword: form.confirmPassword,
-      })
-      .then((response) => {
-        console.log('Registration successful:', response.data);
-        console.log('Sign Up data:', form);
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_HOST}/register`,
+        {
+          username: form.username,
+          email: form.email,
+          password: form.password,
+          confirmPassword: form.confirmPassword,
+        }
+      );
 
-        toast({
-          title: 'Registrasi berhasil 🎉',
-          description: 'Akun kamu sudah dibuat. Silakan login.',
-        });
-
-        router.push('/login');
-      })
-      .catch((error) => {
-        console.error('Registration failed:', error);
-
-        toast({
-          variant: 'destructive',
-          title: 'Registrasi gagal ❌',
-          description:
-            error.response?.data?.message ||
-            'Terjadi kesalahan. Silakan coba lagi.',
-        });
-      })
-      .finally(() => {
-        setLoading(false);
+      toast({
+        title: 'Registrasi Berhasil 🎉',
+        description:
+          response.data.message || 'Silakan cek email Anda untuk kode OTP.',
       });
+
+      // PERUBAHAN: Arahkan ke /register/otp dengan email sebagai query parameter
+      router.push(`/register/otp?email=${encodeURIComponent(form.email)}`);
+    } catch (error) {
+      console.error('Registration failed:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Registrasi Gagal ❌',
+        description:
+          error.response?.data?.message ||
+          'Terjadi kesalahan. Silakan coba lagi.',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -83,7 +81,6 @@ export default function SignUp() {
             <h1 className='mb-6 text-2xl font-bold text-text-primary'>
               Sign Up To Cyclefy
             </h1>
-
             <label className='block mb-2 text-sm font-semibold text-text-primary'>
               Username
             </label>
@@ -94,7 +91,6 @@ export default function SignUp() {
               placeholder='Create your username'
               className='mb-4'
             />
-
             <label className='block mb-2 text-sm font-semibold text-text-primary'>
               Email Address
             </label>
@@ -105,7 +101,6 @@ export default function SignUp() {
               placeholder='Enter your email address'
               className='mb-4'
             />
-
             <label className='block mb-2 text-sm font-semibold text-text-primary'>
               Password
             </label>
@@ -117,7 +112,6 @@ export default function SignUp() {
               placeholder='Create your password'
               className='mb-4'
             />
-
             <label className='block mb-2 text-sm font-semibold text-text-primary'>
               Confirm Password
             </label>
@@ -129,7 +123,6 @@ export default function SignUp() {
               placeholder='Re-enter your password'
               className='mb-6'
             />
-
             <Button
               type='submit'
               className='w-full mb-6 bg-primary text-background hover:opacity-90'
@@ -137,13 +130,11 @@ export default function SignUp() {
             >
               {loading ? 'Loading...' : 'Sign Up'}
             </Button>
-
             <div className='flex items-center gap-4 mb-6'>
               <hr className='flex-1 border-t' />
               <span className='text-sm text-text-subtle'>or sign up with</span>
               <hr className='flex-1 border-t' />
             </div>
-
             <div className='flex justify-center gap-4 text-xl text-text-primary'>
               <FaFacebook className='cursor-pointer hover:text-action' />
               <FaGoogle className='cursor-pointer hover:text-action' />
