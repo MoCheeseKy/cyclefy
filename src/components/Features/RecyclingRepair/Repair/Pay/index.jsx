@@ -41,7 +41,7 @@ const PaymentInstruction = ({ status }) => {
   switch (status.payment_type) {
     case 'bank_transfer':
       return (
-        <div className='p-6 text-center text-white bg-gray-800 rounded-lg'>
+        <div className='p-6 text-center text-white rounded-lg bg-primary'>
           {/* PERBAIKAN: Tambahkan optional chaining (?) dan fallback value */}
           <p className='font-semibold'>
             {status.bank_code?.toUpperCase() || 'Bank Transfer'}
@@ -49,7 +49,7 @@ const PaymentInstruction = ({ status }) => {
           <p className='mt-4 text-sm text-gray-300'>
             Account number / Virtual account
           </p>
-          <div className='flex items-center justify-between p-3 mt-2 bg-gray-700 rounded-md'>
+          <div className='flex items-center justify-between p-3 mt-2 text-white rounded-md'>
             <span className='font-mono text-lg'>{status.va_number}</span>
             <Button
               variant='ghost'
@@ -191,7 +191,7 @@ export default function RepairPayNow() {
   }
 
   return (
-    <div className='flex items-center justify-center min-h-screen p-4 bg-gray-800'>
+    <div className='flex items-center justify-center min-h-screen p-4 '>
       <div className='grid w-full max-w-4xl grid-cols-1 overflow-hidden bg-white shadow-2xl rounded-2xl md:grid-cols-2'>
         <div className='flex flex-col justify-center p-8'>
           <div className='text-center'>
@@ -209,7 +209,7 @@ export default function RepairPayNow() {
           </div>
           <div className='flex items-center justify-between my-8 text-lg'>
             <span className='text-gray-600'>Total Payment</span>
-            <span className='font-bold text-gray-800'>
+            <span className='font-bold text-secondary'>
               {formatCurrency(paymentStatus.total)}
             </span>
           </div>
@@ -241,7 +241,7 @@ export default function RepairPayNow() {
               </li>
             </ol>
           </div>
-          <div className='pt-6 mt-auto border-t border-green-600'>
+          <div className='pt-6 mt-auto'>
             <h3 className='mb-2 text-lg font-semibold'>Order Summary</h3>
             <div className='space-y-2 text-sm'>
               <div className='flex justify-between'>
@@ -256,7 +256,7 @@ export default function RepairPayNow() {
                 <span className='text-gray-300'>Repair ID</span>
                 <span>{paymentStatus.order_id}</span>
               </div>
-              <hr className='my-2 border-green-600' />
+              <hr className='my-2 border-gray-600' />
               <div className='flex justify-between'>
                 <span className='text-gray-300'>Repair Cost</span>
                 <span>{formatCurrency(paymentStatus.amount)}</span>
