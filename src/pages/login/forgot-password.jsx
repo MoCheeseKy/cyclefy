@@ -5,7 +5,7 @@ import ResetPasswordForm from '@/components/ForgotPassword/ResetPasswordForm';
 import ResetSuccess from '@/components/ForgotPassword/ResetSuccess';
 
 export default function ForgotPasswordPage() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(4);
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
 
