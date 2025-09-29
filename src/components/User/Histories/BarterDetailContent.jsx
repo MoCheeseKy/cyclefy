@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import axios from 'axios';
-import Image from 'next/image';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Loader2, Check, X, User } from 'lucide-react';
 
-// Card untuk menampilkan permintaan yang masuk (My Item view)
 function IncomingRequestCard({
   request,
   onProcess,
@@ -26,16 +24,16 @@ function IncomingRequestCard({
           : 'bg-gray-50 border'
       }`}
     >
-      <div className='flex gap-3'>
-        <Image
+      <div className='flex flex-col gap-3 sm:flex-row'>
+        <img
           src={
             request.requester_item.images[0] ||
-            'https://dummyimage.com/48x48/e0e0e0/000&text=No+Image'
+            'https://placehold.co/48x48/e0e0e0/000?text=NP'
           }
           alt={request.requester_item.item_name}
           width={48}
           height={48}
-          className='object-cover w-12 h-12 rounded-md'
+          className='object-cover w-full h-24 rounded-md sm:w-12 sm:h-12'
         />
         <div className='flex-1 min-w-0'>
           <span className='block font-semibold truncate'>
@@ -75,15 +73,13 @@ function IncomingRequestCard({
   );
 }
 
-// Card untuk menampilkan barang yang ditawarkan (Other's Item view)
 function BarterWithCard({ item }) {
   return (
     <div className='gap-3 p-3 bg-gray-100 border rounded-md'>
       <div className='flex gap-3'>
-        <Image
+        <img
           src={
-            item.images[0] ||
-            'https://dummyimage.com/48x48/e0e0e0/000&text=No+Image'
+            item.images[0] || 'https://placehold.co/48x48/e0e0e0/000?text=NP'
           }
           alt={item.item_name}
           width={48}
@@ -164,16 +160,16 @@ export default function BarterDetailContent({
     <div>
       <h4 className='mb-2 font-bold text-gray-800'>Status</h4>
       <div className='relative flex flex-col gap-6 pl-5'>
-        <div className='absolute top-2 bottom-2 left-[9px] w-0.5 bg-gray-400'></div>
+        <div className='absolute top-2 bottom-2 left-[9px] w-0.5 bg-gray-300'></div>
         {histories.map((history) => {
           const isFailed =
             history.status === 'failed' || history.status === 'cancelled';
           return (
             <div key={history.id} className='relative ml-[-17px]'>
-              <div className='absolute -left-[2px] top-1 w-5 h-5 rounded-full flex items-center justify-center bg-gray-200'>
+              <div className='absolute -left-[2px] top-1 w-5 h-5 rounded-full flex items-center justify-center bg-gray-100'>
                 <div
                   className={`w-4 h-4 rounded-full flex items-center justify-center ${
-                    isFailed ? 'bg-red-500' : 'bg-green-700'
+                    isFailed ? 'bg-red-500' : 'bg-secondary'
                   }`}
                 >
                   {isFailed ? (
@@ -185,7 +181,7 @@ export default function BarterDetailContent({
               </div>
               <div className='ml-8'>
                 <div className='flex flex-wrap items-center gap-x-3 gap-y-1'>
-                  <span className='px-3 py-1 text-xs font-semibold text-white capitalize bg-green-800 rounded-md'>
+                  <span className='px-3 py-1 text-xs font-semibold text-white capitalize rounded-md bg-secondary'>
                     {history.status.replace(/_/g, ' ')}
                   </span>
                   <span className='text-xs text-gray-500'>
@@ -204,11 +200,11 @@ export default function BarterDetailContent({
   );
 
   return (
-    <div className='p-6 bg-gray-200'>
+    <div className='p-4 bg-gray-100 md:p-6'>
       <p className='font-semibold text-center text-gray-700'>
         ID. {detailData.id}
       </p>
-      <hr className='my-4 border-gray-400' />
+      <hr className='my-4 border-gray-300' />
       <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
         {isMyItemView ? (
           <>

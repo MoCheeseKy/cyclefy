@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import Wrapper from '@/components/_shared/Wrapper';
 import HistoryList from './HistoryList';
 
+import { ChevronsUpDown } from 'lucide-react';
+
 const sideTabs = [
   { name: 'Donation', value: 'donation', endpoint: '/users/current/donations' },
   { name: 'Barter', value: 'barter', endpoint: '/users/current/barters' },
@@ -12,34 +14,43 @@ const sideTabs = [
 ];
 
 export default function UserHistories() {
-  const router = useRouter();
-  const [activeTab, setActiveTab] = useState('all');
+  const [activeTab, setActiveTab] = useState('donation');
 
   useEffect(() => {
-    if (router.isReady) {
-      const { history_type } = router.query;
-      const validTab = sideTabs.find((tab) => tab.value === history_type);
-      if (validTab) {
-        setActiveTab(validTab.value);
-      }
+    const params = new URLSearchParams(window.location.search);
+    const historyType = params.get('history_type');
+    const validTab = sideTabs.find((tab) => tab.value === historyType);
+    if (validTab) {
+      setActiveTab(validTab.value);
+    } else {
+      setActiveTab('donation');
     }
-  }, [router.isReady, router.query]);
+  }, []);
 
   const activeEndpoint = sideTabs.find(
     (tab) => tab.value === activeTab
   )?.endpoint;
 
+  const handleTabChange = (tabValue) => {
+    setActiveTab(tabValue);
+    const url = new URL(window.location);
+    url.searchParams.set('history_type', tabValue);
+    window.history.pushState({}, '', url);
+  };
+
   return (
-    <div className='flex justify-center py-16 bg-gray-50'>
+    <div className='flex justify-center py-10 bg-gray-50 md:py-16'>
       <Wrapper>
-        <h1 className='mb-8 text-4xl font-bold text-gray-800'>History</h1>
+        <h1 className='mb-6 text-3xl font-bold text-gray-800 md:mb-8 md:text-4xl'>
+          History
+        </h1>
         <div className='flex flex-col gap-8 md:flex-row'>
-          <aside className='flex-shrink-0 w-full md:w-48'>
-            <div className='flex flex-col gap-2'>
+          <aside className='w-full md:w-48 md:flex-shrink-0'>
+            <div className='flex-col hidden gap-2 md:flex'>
               {sideTabs.map((tab) => (
                 <button
                   key={tab.value}
-                  onClick={() => setActiveTab(tab.value)}
+                  onClick={() => handleTabChange(tab.value)}
                   className={`w-full text-left px-4 py-2 rounded-lg font-semibold transition-colors ${
                     activeTab === tab.value
                       ? 'bg-primary text-white shadow'
@@ -49,6 +60,20 @@ export default function UserHistories() {
                   {tab.name}
                 </button>
               ))}
+            </div>
+            <div className='relative w-full md:hidden'>
+              <select
+                value={activeTab}
+                onChange={(e) => handleTabChange(e.target.value)}
+                className='w-full p-3 text-base font-semibold border border-gray-300 rounded-lg appearance-none'
+              >
+                {sideTabs.map((tab) => (
+                  <option key={tab.value} value={tab.value}>
+                    {tab.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronsUpDown className='absolute w-5 h-5 text-gray-500 -translate-y-1/2 top-1/2 right-4' />
             </div>
           </aside>
 

@@ -1,24 +1,23 @@
 import { useState } from 'react';
 import axios from 'axios';
-import Image from 'next/image';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { Loader2, Check, X, User, MapPin } from 'lucide-react';
+import { Loader2, Check } from 'lucide-react';
 
 // Komponen kecil untuk menampilkan satu kartu permintaan
 function RequestCard({ request, onAccept, onDecline, isProcessing }) {
   return (
-    <div className='flex gap-3 p-3 bg-gray-100 rounded-md'>
-      <Image
+    <div className='flex flex-col gap-3 p-3 bg-gray-100 rounded-md sm:flex-row'>
+      <img
         src={
           request.user.profile_picture ||
-          'https://dummyimage.com/48x48/e0e0e0/000&text=No+Image'
+          'https://placehold.co/48x48/e0e0e0/000?text=NP'
         }
         alt={request.user.fullname}
         width={48}
         height={48}
-        className='w-12 h-12 rounded-full'
+        className='object-cover w-12 h-12 rounded-full'
       />
       <div className='flex-1 min-w-0'>
         <div className='flex items-center justify-between'>
@@ -33,10 +32,10 @@ function RequestCard({ request, onAccept, onDecline, isProcessing }) {
           {request.reason}
         </p>
       </div>
-      <div className='flex flex-col gap-1'>
+      <div className='flex flex-row gap-2 mt-2 sm:flex-col sm:mt-0'>
         <Button
           size='sm'
-          className='bg-red-500 hover:bg-red-600 h-7'
+          className='flex-1 bg-red-500 hover:bg-red-600 h-7'
           onClick={() => onDecline(request.id)}
           disabled={isProcessing}
         >
@@ -44,7 +43,7 @@ function RequestCard({ request, onAccept, onDecline, isProcessing }) {
         </Button>
         <Button
           size='sm'
-          className='h-7'
+          className='flex-1 h-7'
           onClick={() => onAccept(request.id)}
           disabled={isProcessing}
         >
@@ -101,7 +100,7 @@ export default function BorrowDetailContent({
       });
       toast({
         title: 'Success',
-        description: `Action "${action.replace('_', ' ')}" was successful.`,
+        description: `Action "${action.replace(/_/g, ' ')}" was successful.`,
       });
       if (onActionSuccess) {
         onActionSuccess();
@@ -119,7 +118,7 @@ export default function BorrowDetailContent({
   };
 
   const renderActionButtons = () => {
-    const status = detailData.status;
+    const status = detailData.status?.status;
     const acceptedRequest = detailData.requests?.find(
       (r) => r.status === 'accepted'
     );
@@ -187,11 +186,11 @@ export default function BorrowDetailContent({
   };
 
   return (
-    <div className='p-6 bg-gray-200'>
+    <div className='p-4 bg-gray-100 md:p-6'>
       <p className='font-semibold text-center text-gray-700'>
         ID. {detailData.id}
       </p>
-      <hr className='my-4 border-gray-400' />
+      <hr className='my-4 border-gray-300' />
       <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
         <div>
           <h4 className='mb-2 font-bold text-gray-800'>Address</h4>
@@ -199,11 +198,11 @@ export default function BorrowDetailContent({
             {detailData.address?.address || 'N/A'}
           </p>
 
-          {detailData.status === 'waiting_for_confirmation' &&
+          {detailData.status?.status === 'waiting_for_confirmation' &&
             detailData.requests?.length > 0 && (
               <div className='mt-6'>
                 <h4 className='mb-2 font-bold text-gray-800'>
-                  Incoming Requests (Others)
+                  Incoming Requests
                 </h4>
                 <div className='space-y-3'>
                   {detailData.requests.map((req) => (
@@ -222,17 +221,17 @@ export default function BorrowDetailContent({
         <div>
           <h4 className='mb-2 font-bold text-gray-800'>Status</h4>
           <div className='relative flex flex-col gap-6 pl-5'>
-            <div className='absolute top-2 bottom-2 left-[9px] w-0.5 bg-gray-400'></div>
+            <div className='absolute top-2 bottom-2 left-[9px] w-0.5 bg-gray-300'></div>
             {detailData.status_histories.map((history) => (
               <div key={history.id} className='relative ml-[-17px]'>
-                <div className='absolute -left-[2px] top-1 w-5 h-5 rounded-full flex items-center justify-center bg-gray-200'>
-                  <div className='flex items-center justify-center w-4 h-4 bg-green-700 rounded-full'>
+                <div className='absolute -left-[2px] top-1 w-5 h-5 rounded-full flex items-center justify-center bg-gray-100'>
+                  <div className='flex items-center justify-center w-4 h-4 rounded-full bg-secondary'>
                     <Check className='w-3 h-3 text-white' />
                   </div>
                 </div>
                 <div className='ml-8'>
                   <div className='flex flex-wrap items-center gap-x-3 gap-y-1'>
-                    <span className='px-3 py-1 text-xs font-semibold text-white capitalize bg-green-800 rounded-md'>
+                    <span className='px-3 py-1 text-xs font-semibold text-white capitalize rounded-md bg-secondary'>
                       {history.status.replace(/_/g, ' ')}
                     </span>
                     <span className='text-xs text-gray-500'>
