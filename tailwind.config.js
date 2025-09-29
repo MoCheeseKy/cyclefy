@@ -35,6 +35,7 @@ module.exports = {
       colors: {
         'primary': '#1E3B20', // Evergreen Teal
         'secondary': '#3C7140', // Marigold Orange
+        'tertiary': '#007908', // Marigold Orange
         'action': '#3E83C5', // Recycle Blue
         'background': '#F7F6F3', // Linen White
         'text-primary': '#3D4043', // Charcoal Gray

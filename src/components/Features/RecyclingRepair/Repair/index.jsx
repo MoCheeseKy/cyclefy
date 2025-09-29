@@ -197,10 +197,17 @@ export default function PostRepairItem() {
             Cyclefy
           </Link>
           <ChevronRight className='text-text-primary' />
-          <Link href='/features/recycling-repair' className='text-text-primary'>
+          <Link href='/features' className='text-text-primary'>
             Key Features
           </Link>
           <ChevronRight className='text-text-primary' />
+          <Link href='/features/recycling-repair' className='text-text-primary'>
+            Recycling & Repair
+          </Link>
+          <ChevronRight className='text-text-primary' />
+          <Link href='/features/repair' className='font-bold text-tertiary'>
+            Post Your Item
+          </Link>
           <span className='text-gray-500'>Repair Your Item</span>
         </div>
         <div className='flex my-[10px] items-center gap-[10px]'>
@@ -239,11 +246,18 @@ export default function PostRepairItem() {
               <div>
                 <h3 className='text-xl font-bold'>Fill Out the Repair Form</h3>
                 <p className='mt-1 text-gray-600'>
-                  Enter the item name, a short description, category, and
-                  estimated weight. Choose the type of repair, enter your
-                  address and contact number, and select your preferred repair
-                  location. Upload two images: a clear front view and a close-up
-                  of the damaged part.
+                  Enter the item name (e.g., <b>Electric Kettle</b>), a short
+                  description (e.g.,{' '}
+                  <b>
+                    Teko pemanas air elektrik, kapasitas 1.7L, baru dipakai
+                    beberapa kali. Kemungkinan masalah terletak pada elemen
+                    pemanas atau sensor otomatis. Saat digunakan, teko bisa
+                    menyala tetapi tidak memanaskan air secara maksimal.
+                  </b>
+                  ), category, and estimated weight.Choose the type of repair
+                  (e.g., Minor, Moderate, Major), enter your address and contact
+                  number, and select your preferred repair location.Upload two
+                  images: a clear front view and a close-up of the damaged part.
                 </p>
               </div>
             </div>

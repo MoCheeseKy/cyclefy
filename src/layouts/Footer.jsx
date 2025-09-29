@@ -19,7 +19,16 @@ function ContactUs() {
 
             <div className='w-full max-w-4xl p-6 mt-6 text-left text-gray-800 bg-white shadow-lg rounded-2xl md:p-10'>
               <div className='mb-8 overflow-hidden rounded-xl'>
-                <div className='flex items-center justify-center w-full h-64 text-gray-500 bg-gray-200'></div>
+                <div className='flex items-center justify-center w-full h-64 text-gray-500 bg-gray-200'>
+                  <iframe
+                    src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4873.0733562907735!2d107.6255820758765!3d-6.969276668241866!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e9bc3974981d%3A0x613eec0feec9fcf7!2sTelkom%20University%20Landmark%20Tower%20(TULT)!5e1!3m2!1sid!2sid!4v1759161455550!5m2!1sid!2sid'
+                    width='100%'
+                    height='100%'
+                    allowfullscreen=''
+                    loading='lazy'
+                    referrerpolicy='no-referrer-when-downgrade'
+                  ></iframe>
+                </div>
               </div>
 
               <div className='flex flex-col gap-6 text-base'>
@@ -50,7 +59,11 @@ export default function Footer() {
 
   return (
     <>
-      <footer className='flex justify-center py-16 text-background bg-primary rounded-tl-[150px] rounded-tr-[150px]'>
+      <footer
+        className={`flex justify-center py-16 text-background bg-primary ${
+          isHomePage && 'rounded-tl-[150px] rounded-tr-[150px]'
+        }`}
+      >
         <Wrapper className='flex flex-col gap-12'>
           {isHomePage && <ContactUs />}
           <div className='flex flex-col justify-between gap-10 lg:flex-row'>

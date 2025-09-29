@@ -143,7 +143,7 @@ export default function Home() {
       </div>
 
       {/* ===== MAIN CONTENT SECTIONS ===== */}
-      <div className='flex flex-col items-center py-20'>
+      <div className='flex flex-col items-center pt-20'>
         <Wrapper id={'features'} className={'flex flex-col items-center mt-20'}>
           <p className='font-bold text-[30px] mb-2'>Key Features</p>
           <p className='text-lg'>
@@ -241,7 +241,8 @@ export default function Home() {
             endIcon={<IoIosArrowForward />}
           />
         </Wrapper>
-
+      </div>
+      <div className='flex flex-col items-center pt-20 pb-40 bg-no-repeat bg-cover bg-block-background'>
         <Wrapper
           id={'about-us'}
           className={

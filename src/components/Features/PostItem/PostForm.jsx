@@ -35,10 +35,10 @@ const getPostTypeDetails = (type) => {
     case 'borrowing':
       return {
         title: 'List an Item for Borrowing',
-        buttonText: 'List This Item',
+        buttonText: 'Post This Item',
       };
     case 'barter':
-      return { title: 'List an Item for Barter', buttonText: 'List This Item' };
+      return { title: 'List an Item for Barter', buttonText: 'Post This Item' };
     default:
       return { title: 'Post an Item', buttonText: 'Post This Item' };
   }
