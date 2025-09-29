@@ -3,7 +3,15 @@
 import Wrapper from '@/components/_shared/Wrapper';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { MapPin, Phone, Mail } from 'lucide-react';
+// 1. Impor ikon MapPin, Phone, Mail, DAN ikon sosial media
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Instagram,
+  Facebook,
+  Twitter,
+} from 'lucide-react';
 
 function ContactUs() {
   return (
@@ -21,12 +29,13 @@ function ContactUs() {
               <div className='mb-8 overflow-hidden rounded-xl'>
                 <div className='flex items-center justify-center w-full h-64 text-gray-500 bg-gray-200'>
                   <iframe
-                    src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4873.0733562907735!2d107.6255820758765!3d-6.969276668241866!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e9bc3974981d%3A0x613eec0feec9fcf7!2sTelkom%20University%20Landmark%20Tower%20(TULT)!5e1!3m2!1sid!2sid!4v1759161455550!5m2!1sid!2sid'
+                    src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4873.0733562907735!2d107.6255820758765!3d-6.969276668241866!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e9bc3974981d%3A0x613eec0feec9fcf7!2sTelkom%20University%20Landmark%20Tower%20(TULT)!5e1!3m2!1sid!2sid!4v1759161455550!5m2!1sid!2sid' // Ganti dengan URL Google Maps Anda
                     width='100%'
                     height='100%'
-                    allowfullscreen=''
+                    allowFullScreen=''
                     loading='lazy'
-                    referrerpolicy='no-referrer-when-downgrade'
+                    referrerPolicy='no-referrer-when-downgrade'
+                    style={{ border: 0 }}
                   ></iframe>
                 </div>
               </div>
@@ -59,17 +68,18 @@ export default function Footer() {
 
   return (
     <>
+      {/* Kondisi untuk menampilkan ContactUs di homepage di-handle di sini */}
+      {isHomePage && <ContactUs />}
+
       <footer
-        className={`flex justify-center py-16 text-background bg-primary ${
-          isHomePage && 'rounded-tl-[150px] rounded-tr-[150px]'
-        }`}
+        className={`flex justify-center py-16 text-background bg-primary`}
       >
         <Wrapper className='flex flex-col gap-12'>
-          {isHomePage && <ContactUs />}
+          {/* Bagian utama footer sekarang tidak lagi memerlukan kondisi isHomePage */}
           <div className='flex flex-col justify-between gap-10 lg:flex-row'>
             <div className='max-w-xs'>
               <Link href='/' className='flex items-center gap-3 mb-4'>
-                <div className='bg-logo bg-no-repeat bg-cover w-[276px] aspect-[135/40]'></div>
+                <div className='bg-logo bg-no-repeat bg-cover w-[150px] aspect-[135/40]'></div>
               </Link>
               <p className='text-sm text-background/70'>
                 Empowering students to share, borrow, recycle, and create a more
@@ -158,27 +168,28 @@ export default function Footer() {
                 <h3 className='mb-4 font-semibold text-background'>
                   Follow Us
                 </h3>
+                {/* 2. Ganti teks dengan komponen Ikon */}
                 <div className='flex items-center gap-3'>
                   <a
-                    href='#'
-                    aria-label='Google'
-                    className='flex items-center justify-center w-8 h-8 bg-white rounded-full hover:bg-gray-200'
+                    href='#' // Ganti dengan link Instagram Anda
+                    aria-label='Instagram'
+                    className='flex items-center justify-center w-8 h-8 transition-colors bg-white rounded-full text-primary hover:bg-gray-200'
                   >
-                    G
+                    <Instagram className='w-5 h-5' />
                   </a>
                   <a
-                    href='#'
+                    href='#' // Ganti dengan link Facebook Anda
                     aria-label='Facebook'
-                    className='flex items-center justify-center w-8 h-8 bg-white rounded-full hover:bg-gray-200'
+                    className='flex items-center justify-center w-8 h-8 transition-colors bg-white rounded-full text-primary hover:bg-gray-200'
                   >
-                    f
+                    <Facebook className='w-5 h-5' />
                   </a>
                   <a
-                    href='#'
+                    href='#' // Ganti dengan link X/Twitter Anda
                     aria-label='Twitter/X'
-                    className='flex items-center justify-center w-8 h-8 bg-white rounded-full hover:bg-gray-200'
+                    className='flex items-center justify-center w-8 h-8 transition-colors bg-white rounded-full text-primary hover:bg-gray-200'
                   >
-                    X
+                    <Twitter className='w-5 h-5' />
                   </a>
                 </div>
               </div>

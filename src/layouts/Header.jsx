@@ -2,13 +2,65 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
-import { Bell } from 'lucide-react';
+import { Bell, Menu, X } from 'lucide-react';
 
 import Wrapper from '@/components/_shared/Wrapper';
 import Button from '@/components/_shared/Button';
 import ProfileDropdown from './ProfileDropdown';
 import LogoutConfirmModal from './LogoutConfirmModal';
 import { useToast } from '@/hooks/use-toast';
+
+// Komponen baru untuk Mobile Menu
+function MobileMenu({ isLoggedIn, profile, handleLogout, onClose }) {
+  return (
+    <div className='fixed inset-0 z-50 flex flex-col p-6 text-white bg-primary lg:hidden'>
+      <div className='flex items-center justify-between mb-10'>
+        <div className='bg-logo bg-no-repeat bg-cover w-[136px] aspect-[135/40]'></div>
+        <button onClick={onClose}>
+          <X size={32} />
+        </button>
+      </div>
+
+      {/* Navigasi Links untuk Mobile */}
+      <nav>
+        <ul className='flex flex-col items-center gap-6'>
+          {navLinks.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                onClick={onClose} // Tutup menu saat link diklik
+                className='text-2xl font-medium transition-colors text-background/80 hover:text-background'
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* User Actions & Language Switcher untuk Mobile */}
+      <div className='flex flex-col items-center gap-6 mt-auto'>
+        {isLoggedIn ? (
+          <ProfileDropdown
+            profile={profile}
+            onLogoutClick={() => {
+              onClose(); // Tutup menu dulu
+              handleLogout(); // Baru jalankan fungsi logout
+            }}
+          />
+        ) : (
+          <Link href={'/login'} className='w-full max-w-xs'>
+            <Button
+              className={'w-full bg-white text-black rounded-3xl'}
+              text={'Get Started'}
+            />
+          </Link>
+        )}
+        <LanguageSwitcher />
+      </div>
+    </div>
+  );
+}
 
 export default function Header() {
   const { toast } = useToast();
@@ -21,6 +73,7 @@ export default function Header() {
   });
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const loadProfileFromLocalStorage = useCallback(() => {
     const token = localStorage.getItem('cyclefy_user_token');
@@ -58,7 +111,6 @@ export default function Header() {
   const fetchNotifications = useCallback(async () => {
     const token = localStorage.getItem('cyclefy_user_token');
     if (!token) return;
-
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_HOST}/users/current/notifications`,
@@ -99,6 +151,8 @@ export default function Header() {
       <header className='flex justify-center py-6 text-white bg-primary'>
         <Wrapper className={'flex justify-between items-center'}>
           <div className='bg-logo bg-no-repeat bg-cover w-[136px] aspect-[135/40]'></div>
+
+          {/* Navigasi Desktop */}
           <nav className='hidden lg:flex'>
             <ul className='flex items-center gap-8'>
               {navLinks.map((link) => (
@@ -113,7 +167,9 @@ export default function Header() {
               ))}
             </ul>
           </nav>
-          <div className='flex items-center gap-4'>
+
+          {/* Aksi Pengguna Desktop */}
+          <div className='items-center hidden gap-4 lg:flex'>
             {isLoggedIn ? (
               <>
                 <Link
@@ -140,8 +196,37 @@ export default function Header() {
             )}
             <LanguageSwitcher />
           </div>
+
+          {/* Tombol Hamburger untuk Mobile/Tablet */}
+          <div className='flex items-center gap-4 lg:hidden'>
+            {isLoggedIn && (
+              <Link
+                href='/user/notifications'
+                className='relative text-white transition-colors hover:text-gray-200'
+              >
+                <Bell size={24} />
+                {hasUnreadNotifications && (
+                  <span className='absolute top-0 right-0 block h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-primary' />
+                )}
+              </Link>
+            )}
+            <button onClick={() => setIsMobileMenuOpen(true)}>
+              <Menu size={32} />
+            </button>
+          </div>
         </Wrapper>
       </header>
+
+      {/* Render Mobile Menu secara kondisional */}
+      {isMobileMenuOpen && (
+        <MobileMenu
+          isLoggedIn={isLoggedIn}
+          profile={profile}
+          handleLogout={handleLogout}
+          onClose={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       <LogoutConfirmModal
         open={showLogoutModal}
         onOpenChange={setShowLogoutModal}
