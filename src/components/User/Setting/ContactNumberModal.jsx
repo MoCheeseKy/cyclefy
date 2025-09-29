@@ -20,22 +20,18 @@ export default function ContactNumberModal({
   const [number, setNumber] = useState('');
 
   useEffect(() => {
-    // Mengisi input dengan data yang ada saat mode edit
     if (initialValue) {
       setNumber(initialValue.number || '');
     } else {
-      // Mengosongkan input saat mode tambah baru
       setNumber('');
     }
   }, [initialValue]);
 
   const handleSave = () => {
-    // Mengirim data dalam format objek kembali ke parent
     onSave({ number });
-    onClose(); // Tutup modal setelah menyimpan
+    onClose();
   };
 
-  // Jangan render apa-apa jika modal tidak terbuka
   if (!isOpen) return null;
 
   return (

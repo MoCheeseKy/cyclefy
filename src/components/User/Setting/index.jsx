@@ -29,7 +29,6 @@ export default function MyAccount() {
   const [isLoading, setIsLoading] = useState(true);
   const [openModal, setOpenModal] = useState({});
 
-  // Fungsi untuk mengambil data profil, dibungkus useCallback agar stabil
   const fetchProfile = useCallback(
     async (showLoading = true) => {
       if (showLoading) setIsLoading(true);
@@ -38,7 +37,7 @@ export default function MyAccount() {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_HOST}/users/current`,
           {
-            headers: { 'Authorization': `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
         const userData = response.data.data;
@@ -65,7 +64,6 @@ export default function MyAccount() {
     fetchProfile();
   }, [fetchProfile]);
 
-  // Handler untuk menyimpan perubahan info dasar (fullname, username, email, password)
   const handleSaveProfile = async (payload) => {
     const token = localStorage.getItem('cyclefy_user_token');
     try {
@@ -73,7 +71,7 @@ export default function MyAccount() {
         `${process.env.NEXT_PUBLIC_HOST}/users/current`,
         payload,
         {
-          headers: { 'Authorization': `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       toast({
@@ -91,12 +89,10 @@ export default function MyAccount() {
     }
   };
 
-  // Handler generik untuk menyimpan (Create/Update) Address atau Contact
   const handleSaveAddressOrContact = async (type, data) => {
     const token = localStorage.getItem('cyclefy_user_token');
     const itemToEdit = openModal[`edit${type}`];
     const isNew = !itemToEdit?.id;
-
     const endpoints = {
       Address: {
         C: '/users/current/addresses',
@@ -107,13 +103,11 @@ export default function MyAccount() {
         U: `/users/current/phones/${itemToEdit?.id}`,
       },
     };
-
     const endpoint = isNew ? endpoints[type].C : endpoints[type].U;
     const method = isNew ? 'post' : 'patch';
-
     try {
       await axios[method](`${process.env.NEXT_PUBLIC_HOST}${endpoint}`, data, {
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
       toast({ title: 'Success', description: `${type} has been saved.` });
       await fetchProfile(false);
@@ -126,20 +120,17 @@ export default function MyAccount() {
     }
   };
 
-  // Handler generik untuk menghapus Address atau Contact
   const handleDeleteAddressOrContact = async (type) => {
     const token = localStorage.getItem('cyclefy_user_token');
     const itemToDelete = openModal[`delete${type}`];
     if (!itemToDelete) return;
-
     const endpoints = {
       Address: `/users/current/addresses/${itemToDelete.id}`,
       Contact: `/users/current/phones/${itemToDelete.id}`,
     };
-
     try {
       await axios.delete(`${process.env.NEXT_PUBLIC_HOST}${endpoints[type]}`, {
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
       toast({ title: 'Success', description: `${type} has been deleted.` });
       await fetchProfile(false);
@@ -161,7 +152,7 @@ export default function MyAccount() {
   }
 
   return (
-    <div className='flex justify-center py-20'>
+    <div className='flex justify-center py-10 md:py-20'>
       <Wrapper>
         <div className='flex flex-col gap-12 md:flex-row'>
           <div className='flex flex-col items-center w-full gap-3 md:w-64'>
@@ -188,11 +179,14 @@ export default function MyAccount() {
               { label: 'Email', key: 'email' },
               { label: 'Password', key: 'password' },
             ].map((field) => (
-              <div className='flex items-center gap-6 mb-4' key={field.key}>
-                <p className='w-32 text-base font-semibold text-black'>
+              <div
+                className='flex flex-col items-start gap-1 mb-4 md:flex-row md:items-center md:gap-6'
+                key={field.key}
+              >
+                <p className='w-auto text-base font-semibold text-black md:w-32'>
                   {field.label}
                 </p>
-                <div className='relative flex-1'>
+                <div className='relative flex-1 w-full'>
                   <input
                     type={field.key === 'password' ? 'password' : 'text'}
                     disabled
@@ -209,9 +203,11 @@ export default function MyAccount() {
               </div>
             ))}
 
-            <div className='flex items-start gap-6 mb-4'>
-              <p className='w-32 text-base font-semibold text-black'>Address</p>
-              <div className='flex flex-col flex-1 gap-3'>
+            <div className='flex flex-col items-start gap-1 mb-4 md:flex-row md:gap-6'>
+              <p className='w-auto text-base font-semibold text-black md:w-32'>
+                Address
+              </p>
+              <div className='flex flex-col flex-1 w-full gap-3'>
                 {profile.addresses.map((addr) => (
                   <div
                     key={addr.id}
@@ -245,11 +241,11 @@ export default function MyAccount() {
               </div>
             </div>
 
-            <div className='flex items-start gap-6'>
-              <p className='w-32 text-base font-semibold text-black'>
+            <div className='flex flex-col items-start gap-1 md:flex-row md:gap-6'>
+              <p className='w-auto text-base font-semibold text-black md:w-32'>
                 Contact Number
               </p>
-              <div className='flex flex-col flex-1 gap-3'>
+              <div className='flex flex-col flex-1 w-full gap-3'>
                 {profile.contactNumbers.map((num) => (
                   <div
                     className='relative flex items-center p-2 pr-20 bg-gray-200 rounded'
@@ -285,7 +281,6 @@ export default function MyAccount() {
           </div>
         </div>
 
-        {/* MODALS */}
         <FullNameModal
           isOpen={openModal.fullName}
           onClose={() => setOpenModal({})}
@@ -309,7 +304,6 @@ export default function MyAccount() {
           onClose={() => setOpenModal({})}
           onSave={(payload) => handleSaveProfile(payload)}
         />
-
         <AddressModal
           isOpen={!!openModal.editAddress}
           onClose={() => setOpenModal({})}
@@ -322,7 +316,6 @@ export default function MyAccount() {
           onSave={(data) => handleSaveAddressOrContact('Contact', data)}
           initialValue={openModal.editContact}
         />
-
         <DeleteConfirmationModal
           isOpen={!!openModal.deleteAddress}
           onClose={() => setOpenModal({})}

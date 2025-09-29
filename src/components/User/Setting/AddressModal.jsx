@@ -21,7 +21,7 @@ export default function AddressModal({
 
   useEffect(() => {
     if (initialValue) {
-      setAddressName(initialValue.addressName || '');
+      setAddressName(initialValue.address_name || '');
       setAddress(initialValue.address || '');
     } else {
       setAddressName('');
@@ -30,7 +30,7 @@ export default function AddressModal({
   }, [initialValue]);
 
   const handleSave = () => {
-    onSave({ addressName: addressName, address });
+    onSave({ address_name: addressName, address });
     onClose();
   };
 
