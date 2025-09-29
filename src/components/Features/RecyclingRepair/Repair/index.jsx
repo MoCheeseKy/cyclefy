@@ -211,7 +211,7 @@ export default function PostRepairItem() {
           <span className='text-gray-500'>Repair Your Item</span>
         </div>
         <div className='flex my-[10px] items-center gap-[10px]'>
-          <div className='w-[60px] h-[60px] bg-gray-200 rounded-full' />
+          <div className='w-[60px] h-[60px] bg-recycle-repair-logo bg-cover bg-no-repeat rounded-full' />
           <p className='text-[30px] font-bold'>Repair Your Item</p>
         </div>
         <p className='text-lg'>
