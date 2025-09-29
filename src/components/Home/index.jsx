@@ -22,6 +22,9 @@ export default function Home() {
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
 
+  // State baru untuk indeks background yang tertunda
+  const [bgIndex, setBgIndex] = useState(0);
+
   const [latestNews, setLatestNews] = useState([]);
   const [isNewsLoading, setIsNewsLoading] = useState(true);
 
@@ -62,6 +65,15 @@ export default function Home() {
     api.on('select', () => setCurrent(api.selectedScrollSnap()));
   }, [api]);
 
+  // useEffect untuk menangani delay background
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setBgIndex(current);
+    }, 1000); // 1000 milidetik = 1 detik
+
+    return () => clearTimeout(timer);
+  }, [current]);
+
   const scrollPrev = () => api?.scrollPrev();
   const scrollNext = () => api?.scrollNext();
 
@@ -74,7 +86,7 @@ export default function Home() {
   return (
     <>
       <div
-        className={`flex flex-col items-center justify-center h-[calc(100vh-88px)] bg-cover bg-no-repeat transition-all duration-500 ${heroBackgrounds[current]}`}
+        className={`flex flex-col items-center justify-center h-[calc(100vh-88px)] bg-cover bg-no-repeat transition-all duration-500 ${heroBackgrounds[bgIndex]}`}
       >
         <Wrapper className={'flex flex-col'}>
           <div className='relative flex'>
@@ -236,7 +248,7 @@ export default function Home() {
             'flex flex-col md:flex-row gap-12 lg:gap-[30px] items-center mt-20'
           }
         >
-          <div className='relative w-full md:min-w-[514px] h-[462px] rounded-xl overflow-hidden bg-about-us-image bg-cover bg-no-repeat'></div>
+          <div className='relative w-full md:min-w-[514px] h-[462px] rounded-xl overflow-hidden  bg-about-us-image bg-cover bg-no-repeat'></div>
           <div className='flex flex-col gap-[30px]'>
             <p className='text-[30px] font-bold'>About Cyclefy</p>
             <p className='text-base text-gray-600'>
