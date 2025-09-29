@@ -164,13 +164,21 @@ export default function Discover() {
           >
             {PostType}
           </Link>
-          <ChevronRight className='text-secondary' />
-          <Link href='/' className='text-secondary'>
+          <ChevronRight className='text-text-primaary' />
+          <Link href='/' className='font-bold text-tertiary'>
             Search for Items to {PostType}
           </Link>
         </div>
         <div className='flex my-[10px] items-center gap-[10px]'>
-          <div className='w-[60px] h-[60px] bg-gray-200 rounded-full' />
+          <div
+            className={`w-[60px] h-[60px] ${
+              discover_type === 'donation'
+                ? 'bg-donation-logo'
+                : discover_type === 'barter'
+                ? 'bg-barter-logo'
+                : 'bg-borrowing-logo'
+            } rounded-full`}
+          />
           <p className='text-[30px] font-bold'>Search Item for {PostType}</p>
         </div>
         <p className='text-lg '>{PostDescription}</p>
@@ -189,7 +197,7 @@ export default function Discover() {
               />
               <Button
                 onClick={handleSearch}
-                className='bg-green-800 rounded-l-none hover:bg-green-700'
+                className='rounded-l-none bg-secondary hover:bg-primary'
               >
                 Search
               </Button>
@@ -208,7 +216,7 @@ export default function Discover() {
                 }}
                 defaultValue={sortBy}
               >
-                <SelectTrigger className='w-[220px] bg-green-800 text-white'>
+                <SelectTrigger className='w-[220px] bg-secondary text-white'>
                   <ArrowUpDown className='w-4 h-4 mr-2' />
                   <SelectValue placeholder='Sort by' />
                 </SelectTrigger>

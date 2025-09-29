@@ -88,11 +88,11 @@ export default function NewsDetail() {
             Cyclefy
           </Link>
           <ChevronRight className='w-4 h-4' />
-          <Link href='/news/discover' className='hover:text-primary'>
+          <Link href='/#news' className='hover:text-primary'>
             News
           </Link>
           <ChevronRight className='w-4 h-4' />
-          <span className='font-semibold text-gray-700 truncate'>
+          <span className='font-semibold font-bold text-tertiary'>
             {newsData.title}
           </span>
         </div>

@@ -175,8 +175,8 @@ export default function RequestBarterPage() {
           <Link href='/features/discover/barter' className='text-text-primary'>
             Search for Items to Barter
           </Link>
-          <ChevronRight className='text-secondary' />
-          <span className='text-secondary'>Request to Barter</span>
+          <ChevronRight className='text-text-primary' />
+          <span className='font-bold text-tertiary'>Request to Barter</span>
         </div>
         <div className='flex items-center gap-4 my-4'>
           <div className='w-16 h-16 bg-gray-200 rounded-full' />
@@ -202,7 +202,15 @@ export default function RequestBarterPage() {
               In the Request to Barter form, choose how to offer your item:
               <ul className='mt-2 ml-4 space-y-1 list-disc'>
                 <li>
-                  <b>To post a new form:</b> Manually enter item details.
+                  Fill out a new form: Manually enter item detailsEnter your
+                  item name (e.g., <b>Electric Kettle</b>), a clear description
+                  (e.g.,
+                  <b>
+                    Teko pemanas air elektrik, kapasitas 1.7L, baru dipakai
+                    beberapa kali
+                  </b>
+                  .), choose a category, location, and contact info. Don’t
+                  forget to upload photos.
                 </li>
                 <li>
                   <b>Use existing item:</b> Select from items you{"'"}ve

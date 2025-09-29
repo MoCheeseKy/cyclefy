@@ -36,15 +36,13 @@ export default function RequestBorrow() {
           <ChevronRight className='text-text-primary' />
           <Link
             href='/features/discover/borrowing'
-            className='text-text-primary'
+            className='font-bold text-tertiary'
           >
             Search for Items to Borrow
           </Link>
-          <ChevronRight className='text-secondary' />
-          <span className='text-secondary'>Request to Borrow</span>
         </div>
         <div className='flex items-center gap-4 my-4'>
-          <div className='w-16 h-16 bg-gray-200 rounded-full' />
+          <div className='w-[60px] aspect-square bg-borrowing-logo bg-cover bg-no-repeat rounded-full'></div>
           <h1 className='text-3xl font-bold'>Request to Borrow</h1>
         </div>
         <p className='max-w-4xl text-lg text-gray-600'>
@@ -56,26 +54,29 @@ export default function RequestBorrow() {
           {/* Kolom Kiri: Instruksi */}
           <div className='flex flex-col gap-6'>
             <h2 className='text-3xl font-bold'>How To Request a Borrow?</h2>
-            <Step number='1' title='Prepare Your Item'>
-              Clean it, make sure it’s still functional, and ready to be
-              swapped.
+            <Step number='1' title='Review the Item Details'>
+              Make sure the item suits your needs and is available on the dates
+              you intend to borrow it. Read the description, availability, and
+              location carefully.
             </Step>
-            <Step number='2' title='Offer Your Item'>
-              In the Request to Barter form, choose how to offer your item:
-              <ul className='mt-2 ml-4 space-y-1 list-disc'>
-                <li>
-                  <b>To post a new form:</b> Manually enter item details.
-                </li>
-                <li>
-                  <b>Use existing item:</b> Select from items you{"'"}ve
-                  previously posted.
-                </li>
-              </ul>
+            <Step number='2' title='Fill Out the Request Form'>
+              Provide a clear reason for borrowing (e.g.,{' '}
+              <b>
+                Saya sedang tinggal di kos dan belum punya teko listrik sendiri.
+                Teko ini akan sangat membantu untuk membuat air hangat, menyeduh
+                teh, atau memasak mie instan dengan praktis, terutama saat malam
+                hari atau ketika sedang terburu-buru. Saya akan menjaga barang
+                ini dengan baik dan mengembalikannya sesuai waktu yang
+                disepakati
+              </b>
+              ), your address, and contact number.Then, select the borrowing
+              duration by setting the start and end dates. Be honest and
+              realistic with your timeframe.
             </Step>
             <Step number='3' title='Submit & Confirm'>
-              Tap Send Request. The item owner will be notified. If they{"'"}re
-              interested in your offer, you{"'"}ll be contacted to arrange the
-              exchange.
+              Click Send Request. The item owner will receive your request and
+              decide whether to approve or decline it. You can check the status
+              of your request in your Borrowing History.
             </Step>
           </div>
 

@@ -1,5 +1,5 @@
 // pages/news/index.jsx (atau path yang sesuai)
-
+import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import Wrapper from '../_shared/Wrapper';
@@ -21,7 +21,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { Search, Loader2, ArrowUpDown } from 'lucide-react';
+import { Loader2, ArrowUpDown, Mail, ChevronRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function News() {
@@ -82,9 +82,20 @@ export default function News() {
   return (
     <div className='flex justify-center py-20 bg-gray-50'>
       <Wrapper>
+        <div className='flex items-center gap-2 mb-8 text-sm text-gray-500'>
+          <Link href='/' className='hover:text-primary'>
+            Cyclefy
+          </Link>
+          <ChevronRight className='w-4 h-4' />
+          <Link href='/#news' className='font-bold text-tertiary'>
+            News
+          </Link>
+        </div>
         <div className='flex flex-col gap-2'>
           <div className='flex items-center gap-3'>
-            <div className='w-[60px] h-[60px] bg-[#252525] rounded-full'></div>
+            <div className='w-[60px] h-[60px] bg-white text-black flex items-center justify-center rounded-full'>
+              <Mail size={42} />
+            </div>
             <h1 className='text-[30px] font-bold'>Explore News</h1>
           </div>
           <p className='text-gray-600'>
@@ -98,18 +109,20 @@ export default function News() {
             <Input
               type='text'
               placeholder='Search by news title...'
-              className='h-12 text-base rounded-r-none focus-visible:ring-0 focus-visible:ring-offset-0'
+              className='rounded-r-none focus-visible:ring-0 focus-visible:ring-offset-0'
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             />
-            <Button onClick={handleSearch} className='h-12 rounded-l-none'>
-              <Search className='w-5 h-5 mr-2 sm:hidden' />
-              <span className='hidden sm:inline'>Search</span>
+            <Button
+              onClick={handleSearch}
+              className='rounded-l-none bg-secondary hover:bg-primary'
+            >
+              Search
             </Button>
           </div>
           <Select onValueChange={handleSortChange} defaultValue={orderBy}>
-            <SelectTrigger className='w-full sm:w-[180px] h-12 text-base'>
+            <SelectTrigger className='w-full sm:w-[180px]  text-base bg-secondary text-white'>
               <ArrowUpDown className='w-4 h-4 mr-2' />
               <SelectValue placeholder='Sort by' />
             </SelectTrigger>

@@ -109,8 +109,8 @@ export default function Detail() {
           >
             Search for Items to {postTypeCapitalized}
           </Link>
-          <ChevronRight className='text-secondary' />
-          <span className='text-secondary'>{item.item_name}</span>
+          <ChevronRight className='text-text-primary' />
+          <span className='font-bold text-tertiary'>{item.item_name}</span>
         </div>
 
         {/* Konten Detail */}
@@ -164,7 +164,7 @@ export default function Detail() {
               </div>
             </div>
             <p className='mt-6 text-gray-700'>{item.description}</p>
-            <div className='flex-grow'></div> {/* Spacer to push button down */}
+            <div className='flex-grow'></div>
             <Link
               href={`/features/request/${
                 requestType === 'borrow' ? 'borrowing' : requestType
