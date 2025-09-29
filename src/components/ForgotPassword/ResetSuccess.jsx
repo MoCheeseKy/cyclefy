@@ -15,7 +15,10 @@ export default function ResetSuccess() {
         Your password has been successfully reset. You can now sign in with your
         new password.
       </p>
-      <Button onClick={() => router.push('/login')} className='w-full mt-6'>
+      <Button
+        onClick={() => router.push('/login')}
+        className='w-full mt-6 text-white'
+      >
         Sign In
       </Button>
     </div>

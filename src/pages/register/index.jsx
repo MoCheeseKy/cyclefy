@@ -73,7 +73,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className='flex items-center justify-center min-h-screen bg-background'>
+    <div className='flex items-center justify-center min-h-screen bg-no-repeat bg-cover bg-block-background'>
       <div className='w-[970px] max-w-full flex overflow-hidden rounded-bl-[36px] rounded-tr-[36px] shadow-lg bg-primary'>
         {/* Left Panel */}
         <div className='w-1/2 bg-background px-12 py-12 flex items-center justify-center rounded-tr-[36px]'>
@@ -156,10 +156,7 @@ export default function SignUp() {
               Sign In
             </Button>
           </div>
-          <div className='flex items-center gap-3 mt-12'>
-            <div className='w-8 h-8 bg-background' />
-            <span className='text-lg font-bold text-background'>Cyclefy</span>
-          </div>
+          <div className='bg-logo bg-no-repeat bg-cover w-[136px] aspect-[135/40]'></div>
         </div>
       </div>
     </div>

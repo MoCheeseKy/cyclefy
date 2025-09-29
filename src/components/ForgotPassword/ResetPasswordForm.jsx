@@ -76,7 +76,11 @@ export default function ResetPasswordForm({ email, otp, setStep }) {
           className='mt-1'
         />
       </div>
-      <Button type='submit' disabled={isLoading} className='w-full !mt-6'>
+      <Button
+        type='submit'
+        disabled={isLoading}
+        className='w-full !mt-6 text-white'
+      >
         {isLoading ? <Loader2 className='animate-spin' /> : 'Update Password'}
       </Button>
     </form>

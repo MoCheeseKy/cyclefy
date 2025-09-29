@@ -75,7 +75,6 @@ export default function Home() {
     <>
       <div className='flex flex-col items-center py-20'>
         <Wrapper className={'flex flex-col items-center'}>
-          {/* Hero Carousel Section */}
           <div className='relative w-full'>
             <Carousel setApi={setApi} className='w-full'>
               <CarouselContent>
@@ -129,7 +128,6 @@ export default function Home() {
           </div>
         </Wrapper>
 
-        {/* Key Features Section */}
         <Wrapper id={'features'} className={'flex flex-col items-center mt-20'}>
           <p className='font-bold text-[30px] mb-2'>Key Features</p>
           <p className='text-lg'>
@@ -139,20 +137,37 @@ export default function Home() {
             {features?.map((feat, featIndex) => (
               <div
                 key={featIndex}
-                className='bg-primary/50 h-[310px] w-full rounded-[12px] flex justify-end'
+                className='bg-primary h-fit w-full rounded-[12px] flex justify-end'
               >
-                <div className='bg-primary h-full w-[calc(100%-16px)] rounded-[12px] p-[30px] text-white flex flex-col justify-between'>
+                <div className='bg-secondary h-full w-[calc(100%-16px)] rounded-[12px] p-[30px] text-white flex flex-col justify-between'>
                   <div className='flex flex-col gap-[10px]'>
-                    <div className='w-[70px] aspect-square rounded-full bg-white' />
-                    <p className='text-xl font-bold'>{feat?.name}</p>
+                    <div className='flex items-center gap-4'>
+                      <div
+                        className={`w-[70px] aspect-square rounded-full bg-cover bg-no-repeat 
+                        ${feat?.name === 'Donation' ? 'bg-donation-logo' : ''}
+                        ${feat?.name === 'Barter' ? 'bg-barter-logo' : ''}
+                        ${feat?.name === 'Borrowing' ? 'bg-borrowing-logo' : ''}
+                        ${
+                          feat?.name === 'Recycling & Repair'
+                            ? 'bg-recycle-repair-logo'
+                            : ''
+                        }
+                        `}
+                      />
+                      <p className='text-xl font-bold'>{feat?.name}</p>
+                    </div>
                     <p className='text-sm '>{feat?.description}</p>
                   </div>
-                  <Button
-                    onClick={() => router.push(feat?.href)}
-                    className={'w-full bg-white text-black hover:bg-gray-200'}
-                  >
-                    Go To {feat?.name}
-                  </Button>
+                  <div className='flex justify-center w-full'>
+                    <Button
+                      onClick={() => router.push(feat?.href)}
+                      className={
+                        'w-full max-w-[290px] bg-white text-black hover:bg-gray-200 rounded-[16px] mt-[62px]'
+                      }
+                    >
+                      Go To {feat?.name}
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -211,21 +226,13 @@ export default function Home() {
           />
         </Wrapper>
 
-        {/* About Us Section */}
         <Wrapper
           id={'about-us'}
           className={
             'flex flex-col md:flex-row gap-12 lg:gap-24 items-center mt-20'
           }
         >
-          <div className='relative w-full md:min-w-[514px] h-[462px] rounded-xl overflow-hidden bg-gray-200'>
-            <Image
-              src='https://images.unsplash.com/photo-1532629345422-7515f3d16bb6'
-              alt='About Cyclefy'
-              layout='fill'
-              objectFit='cover'
-            />
-          </div>
+          <div className='relative w-full md:min-w-[514px] h-[462px] rounded-xl overflow-hidden bg-gray-200 bg-about-us-image bg-cover bg-no-repeat'></div>
           <div className='flex flex-col gap-[30px]'>
             <p className='text-[30px] font-bold'>About Cyclefy</p>
             <p className='text-base text-gray-600'>
@@ -252,25 +259,25 @@ const features = [
     name: 'Donation',
     href: '/features/donation',
     description:
-      'Give your unused items a new life by donating them to fellow students in need.',
+      'Donate unused items to others who can benefit from them, reducing waste and supporting the community.',
   },
   {
     name: 'Barter',
     href: '/features/barter',
     description:
-      'Exchange your items with others in a simple, cashless transaction system.',
+      'Swap items you no longer need with others, creating a sustainable way to exchange resources.',
   },
   {
     name: 'Borrowing',
     href: '/features/borrowing',
     description:
-      'Need something for a short time? Borrow items from others instead of buying new.',
+      'Borrow or lend items with others, helping reduce waste and promoting a sharing economy among students.',
   },
   {
     name: 'Recycling & Repair',
     href: '/features/recycling-repair',
     description:
-      'Find locations to recycle your goods or get them repaired to extend their lifespan.',
+      'Recycle old items and repair what can be reused, contributing to a circular economy and reducing waste.',
   },
 ];
 const heroSlides = [

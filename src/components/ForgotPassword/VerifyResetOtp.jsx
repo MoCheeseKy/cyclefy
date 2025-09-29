@@ -99,7 +99,11 @@ export default function VerifyResetOtp({ email, setOtp, setStep }) {
           {canResend ? 'Resend' : `Resend in ${resendCooldown}s`}
         </button>
       </div>
-      <Button onClick={handleVerify} disabled={isLoading} className='w-full'>
+      <Button
+        onClick={handleVerify}
+        disabled={isLoading}
+        className='w-full text-white'
+      >
         {isLoading ? <Loader2 className='animate-spin' /> : 'Verify Email'}
       </Button>
     </div>

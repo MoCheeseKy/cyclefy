@@ -62,7 +62,7 @@ export default function ForgotPasswordForm({ setEmail, setStep }) {
           className='mt-1'
         />
       </div>
-      <Button type='submit' disabled={isLoading} className='w-full'>
+      <Button type='submit' disabled={isLoading} className='w-full text-white'>
         {isLoading ? <Loader2 className='animate-spin' /> : 'Next'}
       </Button>
     </form>

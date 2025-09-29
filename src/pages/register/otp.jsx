@@ -98,7 +98,7 @@ export default function RegisterOtpPage() {
   };
 
   return (
-    <div className='flex items-center justify-center min-h-screen p-4 bg-gray-100'>
+    <div className='flex items-center justify-center min-h-screen p-4 bg-no-repeat bg-cover bg-block-background'>
       <div className='w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-2xl'>
         <div className='text-center'>
           <h1 className='text-2xl font-bold'>Verify your email address</h1>

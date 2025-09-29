@@ -8,7 +8,7 @@ export default function RegisterSuccess() {
   const router = useRouter();
 
   return (
-    <div className='w-full max-w-md p-8 text-center bg-white shadow-lg rounded-2xl'>
+    <div className='w-full max-w-md p-8 text-center bg-no-repeat bg-cover shadow-lg bg-block-background rounded-2xl'>
       <CheckCircle2 className='w-16 h-16 mx-auto text-green-500' />
       <h1 className='mt-4 text-2xl font-bold'>Email Verification Successful</h1>
       <p className='mt-2 text-gray-600'>

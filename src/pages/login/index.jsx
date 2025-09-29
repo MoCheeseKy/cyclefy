@@ -73,15 +73,12 @@ export default function SignIn() {
             <p className='mb-2 text-sm'>Dont have an account? </p>
             <Button
               onClick={() => router.push('/register')}
-              className='w-full mb-6 bg-background text-primary'
+              className='w-full mb-6 bg-background text-primary hover:bg-white'
             >
               Sign In
             </Button>
           </div>
-          <div className='flex items-center gap-3 mt-12'>
-            <div className='w-8 h-8 bg-background' />
-            <span className='text-lg font-bold text-background'>Cyclefy</span>
-          </div>
+          <div className='bg-logo bg-no-repeat bg-cover w-[136px] aspect-[135/40]'></div>
         </div>
 
         {/* Right Panel */}

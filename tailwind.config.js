@@ -15,6 +15,11 @@ module.exports = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         'logo': "url('/images/logo.svg')",
         'block-background': "url('/images/block-background.svg')",
+        'about-us-image': "url('/images/about-us-image.svg')",
+        'barter-logo': "url('/images/barter-logo.svg')",
+        'donation-logo': "url('/images/donation-logo.svg')",
+        'borrowing-logo': "url('/images/borrowing-logo.svg')",
+        'recycle-repair-logo': "url('/images/recycle-repair-logo.svg')",
       },
       borderRadius: {
         lg: 'var(--radius)',
