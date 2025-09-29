@@ -15,9 +15,9 @@ import {
 
 function ContactUs() {
   return (
-    <div className='pt-16 bg-primary'>
+    <div className='flex justify-center pt-16 bg-primary rounded-t-[75px] lg:rounded-t-[150px]'>
       <Wrapper>
-        <div className='relative bg-primary rounded-t-3xl lg:rounded-t-[50px] overflow-hidden'>
+        <div className='relative overflow-hidden bg-primary'>
           <div className='absolute inset-0 bg-primary'></div>
           <div className='relative z-10 flex flex-col items-center gap-6 px-4 py-16 text-center text-background'>
             <h2 className='text-4xl font-bold'>Contact Us</h2>
@@ -68,14 +68,12 @@ export default function Footer() {
 
   return (
     <>
-      {/* Kondisi untuk menampilkan ContactUs di homepage di-handle di sini */}
       {isHomePage && <ContactUs />}
 
       <footer
-        className={`flex justify-center py-16 text-background bg-primary`}
+        className={`flex justify-center py-16 text-background bg-primary `}
       >
         <Wrapper className='flex flex-col gap-12'>
-          {/* Bagian utama footer sekarang tidak lagi memerlukan kondisi isHomePage */}
           <div className='flex flex-col justify-between gap-10 lg:flex-row'>
             <div className='max-w-xs'>
               <Link href='/' className='flex items-center gap-3 mb-4'>

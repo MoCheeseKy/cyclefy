@@ -21,10 +21,7 @@ export default function Home() {
   const [api, setApi] = useState();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
-
-  // State baru untuk indeks background yang tertunda
   const [bgIndex, setBgIndex] = useState(0);
-
   const [latestNews, setLatestNews] = useState([]);
   const [isNewsLoading, setIsNewsLoading] = useState(true);
 
@@ -41,11 +38,7 @@ export default function Home() {
           `${process.env.NEXT_PUBLIC_HOST}/news`,
           {
             headers,
-            params: {
-              page: 1,
-              size: 8,
-              orderBy: 'newest',
-            },
+            params: { page: 1, size: 8, orderBy: 'newest' },
           }
         );
         setLatestNews(response.data.data || []);
@@ -65,12 +58,10 @@ export default function Home() {
     api.on('select', () => setCurrent(api.selectedScrollSnap()));
   }, [api]);
 
-  // useEffect untuk menangani delay background
   useEffect(() => {
     const timer = setTimeout(() => {
       setBgIndex(current);
-    }, 1000); // 1000 milidetik = 1 detik
-
+    }, 1000);
     return () => clearTimeout(timer);
   }, [current]);
 
@@ -86,23 +77,23 @@ export default function Home() {
   return (
     <>
       <div
-        className={`flex flex-col items-center justify-center h-[calc(100vh-88px)] bg-cover bg-no-repeat transition-all duration-500 ${heroBackgrounds[bgIndex]}`}
+        className={`flex flex-col items-center justify-center h-[calc(100vh-88px)] bg-cover bg-center bg-no-repeat transition-all duration-500 ${heroBackgrounds[bgIndex]}`}
       >
         <Wrapper className={'flex flex-col'}>
           <div className='relative flex'>
-            <Carousel setApi={setApi} className='flex w-full '>
+            <Carousel setApi={setApi} className='flex w-full'>
               <CarouselContent>
                 {heroSlides.map((slide, index) => (
                   <CarouselItem key={index}>
-                    <div className='flex items-center justify-between gap-8 px-[100px]'>
-                      <div className='flex flex-col max-w-lg gap-4'>
-                        <p className='text-6xl font-bold text-text-primary'>
+                    <div className='flex flex-col items-center justify-center gap-8 text-center md:flex-row md:justify-between md:text-left md:px-[100px]'>
+                      <div className='flex flex-col order-2 w-full max-w-lg gap-4 md:order-1'>
+                        <p className='text-4xl font-bold md:text-6xl text-text-primary'>
                           {slide.title}
                         </p>
                         <p className='text-text-subtle'>{slide.description}</p>
                       </div>
                       <div
-                        className={`relative min-w-[595px] aspect-[633/480] rounded-xl overflow-hidden bg-cover bg-no-repeat
+                        className={`relative w-full max-w-sm md:max-w-none md:min-w-[595px] aspect-[633/480] rounded-xl overflow-hidden bg-cover bg-no-repeat order-1 md:order-2
                         ${index === 0 ? 'bg-hero-image-1' : ''}
                         ${index === 1 ? 'bg-hero-image-2' : ''}
                         ${index === 2 ? 'bg-hero-image-3' : ''}
@@ -116,14 +107,14 @@ export default function Home() {
             <Button
               onClick={scrollPrev}
               variant='outline'
-              className='absolute left-0 top-1/2 h-[70px] w-[70px] -translate-y-1/2 rounded-full bg-white text-primary shadow-lg hover:bg-gray-100'
+              className='absolute left-0 top-1/2 h-[70px] w-[70px] -translate-y-1/2 rounded-full bg-white text-primary shadow-lg hover:bg-gray-100 hidden md:flex'
             >
               <IoIosArrowBack className='text-4xl' />
             </Button>
             <Button
               onClick={scrollNext}
               variant='outline'
-              className='absolute right-0 top-1/2 h-[70px] w-[70px] -translate-y-1/2 rounded-full bg-white text-primary shadow-lg hover:bg-gray-100'
+              className='absolute right-0 top-1/2 h-[70px] w-[70px] -translate-y-1/2 rounded-full bg-white text-primary shadow-lg hover:bg-gray-100 hidden md:flex'
             >
               <IoIosArrowForward className='text-4xl' />
             </Button>
@@ -142,24 +133,23 @@ export default function Home() {
         </Wrapper>
       </div>
 
-      {/* ===== MAIN CONTENT SECTIONS ===== */}
-      <div className='flex flex-col items-center pt-20'>
-        <Wrapper id={'features'} className={'flex flex-col items-center mt-20'}>
-          <p className='font-bold text-[30px] mb-2'>Key Features</p>
-          <p className='text-lg'>
+      <div className='flex flex-col items-center py-10 md:py-20'>
+        <Wrapper id={'features'} className={'flex flex-col items-center'}>
+          <p className='text-2xl font-bold md:text-[30px] mb-2'>Key Features</p>
+          <p className='text-base text-center md:text-lg'>
             Empowering students to share, borrow, recycle, and repair.
           </p>
-          <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-[30px] mt-[30px]'>
+          <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-[30px] mt-8 md:mt-[30px]'>
             {features?.map((feat, featIndex) => (
               <div
                 key={featIndex}
                 className='bg-primary h-fit w-full rounded-[12px] flex justify-end'
               >
-                <div className='bg-secondary h-full w-[calc(100%-16px)] rounded-[12px] p-[30px] text-white flex flex-col justify-between'>
+                <div className='bg-secondary h-full w-[calc(100%-12px)] md:w-[calc(100%-16px)] rounded-[12px] p-6 md:p-[30px] text-white flex flex-col justify-between'>
                   <div className='flex flex-col gap-[10px]'>
                     <div className='flex items-center gap-4'>
                       <div
-                        className={`w-[70px] aspect-square rounded-full bg-cover bg-no-repeat 
+                        className={`w-[60px] md:w-[70px] aspect-square rounded-full bg-cover bg-no-repeat 
                         ${feat?.name === 'Donation' ? 'bg-donation-logo' : ''}
                         ${feat?.name === 'Barter' ? 'bg-barter-logo' : ''}
                         ${feat?.name === 'Borrowing' ? 'bg-borrowing-logo' : ''}
@@ -172,13 +162,13 @@ export default function Home() {
                       />
                       <p className='text-xl font-bold'>{feat?.name}</p>
                     </div>
-                    <p className='text-sm '>{feat?.description}</p>
+                    <p className='text-sm'>{feat?.description}</p>
                   </div>
                   <div className='flex justify-center w-full'>
                     <Button
                       onClick={() => router.push(feat?.href)}
                       className={
-                        'w-full max-w-[290px] bg-white text-black hover:bg-gray-200 rounded-[16px] mt-[62px]'
+                        'w-full max-w-[290px] bg-white text-black hover:bg-gray-200 rounded-[16px] mt-8 md:mt-[62px]'
                       }
                     >
                       Go To {feat?.name}
@@ -190,14 +180,13 @@ export default function Home() {
           </div>
         </Wrapper>
 
-        {/* Latest News Section */}
         <Wrapper id={'news'} className={'flex flex-col items-center mt-20'}>
-          <p className='font-bold text-[30px] mb-2'>Latest News</p>
-          <p className='max-w-2xl text-lg text-center'>
+          <p className='text-2xl font-bold md:text-[30px] mb-2'>Latest News</p>
+          <p className='max-w-2xl text-base text-center md:text-lg'>
             Stay updated with the latest articles, tips, and stories from our
             community.
           </p>
-          <div className='w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-[30px] min-h-[300px]'>
+          <div className='w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8 md:mt-[30px] min-h-[300px]'>
             {isNewsLoading ? (
               <div className='flex items-center justify-center col-span-full'>
                 <Loader2 className='w-8 h-8 text-gray-400 animate-spin' />
@@ -242,16 +231,16 @@ export default function Home() {
           />
         </Wrapper>
       </div>
-      <div className='flex flex-col items-center pt-20 pb-40 bg-no-repeat bg-cover bg-block-background'>
+      <div className='flex flex-col items-center pt-10 pb-20 bg-no-repeat bg-cover md:pt-20 md:pb-40 bg-block-background'>
         <Wrapper
           id={'about-us'}
           className={
-            'flex flex-col md:flex-row gap-12 lg:gap-[30px] items-center mt-20'
+            'flex flex-col md:flex-row gap-12 lg:gap-[30px] items-center'
           }
         >
-          <div className='relative w-full md:min-w-[514px] h-[462px] rounded-xl overflow-hidden  bg-about-us-image bg-cover bg-no-repeat'></div>
-          <div className='flex flex-col gap-[30px]'>
-            <p className='text-[30px] font-bold'>About Cyclefy</p>
+          <div className='relative w-full h-80 md:min-w-[514px] md:h-[462px] rounded-xl overflow-hidden bg-about-us-image bg-cover bg-center bg-no-repeat'></div>
+          <div className='flex flex-col gap-6 md:gap-[30px]'>
+            <p className='text-2xl font-bold md:text-[30px]'>About Cyclefy</p>
             <p className='text-base text-gray-600'>
               Cyclefy is a website-based digital platform designed to foster the
               circular economy within the student community. Through a range of
