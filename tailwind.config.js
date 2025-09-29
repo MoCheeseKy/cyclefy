@@ -20,6 +20,12 @@ module.exports = {
         'donation-logo': "url('/images/donation-logo.svg')",
         'borrowing-logo': "url('/images/borrowing-logo.svg')",
         'recycle-repair-logo': "url('/images/recycle-repair-logo.svg')",
+        'hero-image-1': "url('/images/hero-image-1.svg')",
+        'hero-image-2': "url('/images/hero-image-2.svg')",
+        'hero-image-3': "url('/images/hero-image-3.svg')",
+        'hero-background-1': "url('/images/hero-background-1.svg')",
+        'hero-background-2': "url('/images/hero-background-2.svg')",
+        'hero-background-3': "url('/images/hero-background-3.svg')",
       },
       borderRadius: {
         lg: 'var(--radius)',

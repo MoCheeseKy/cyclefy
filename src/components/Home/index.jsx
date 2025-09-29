@@ -28,21 +28,16 @@ export default function Home() {
   useEffect(() => {
     const fetchLatestNews = async () => {
       setIsNewsLoading(true);
-
-      // Mengambil token dari localStorage
       const token = localStorage.getItem('cyclefy_user_token');
       const headers = {};
-
-      // Jika token ada, tambahkan ke header
       if (token) {
         headers.Authorization = `Bearer ${token}`;
       }
-
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_HOST}/news`,
           {
-            headers, // Mengirim header dengan atau tanpa token
+            headers,
             params: {
               page: 1,
               size: 8,
@@ -57,7 +52,6 @@ export default function Home() {
         setIsNewsLoading(false);
       }
     };
-
     fetchLatestNews();
   }, []);
 
@@ -71,30 +65,37 @@ export default function Home() {
   const scrollPrev = () => api?.scrollPrev();
   const scrollNext = () => api?.scrollNext();
 
+  const heroBackgrounds = [
+    'bg-hero-background-1',
+    'bg-hero-background-2',
+    'bg-hero-background-3',
+  ];
+
   return (
     <>
-      <div className='flex flex-col items-center py-20'>
-        <Wrapper className={'flex flex-col items-center'}>
-          <div className='relative w-full'>
-            <Carousel setApi={setApi} className='w-full'>
+      <div
+        className={`flex flex-col items-center justify-center h-[calc(100vh-88px)] bg-cover bg-no-repeat transition-all duration-500 ${heroBackgrounds[current]}`}
+      >
+        <Wrapper className={'flex flex-col'}>
+          <div className='relative flex'>
+            <Carousel setApi={setApi} className='flex w-full '>
               <CarouselContent>
                 {heroSlides.map((slide, index) => (
                   <CarouselItem key={index}>
-                    <div className='flex items-center justify-between gap-8 px-24'>
+                    <div className='flex items-center justify-between gap-8 px-[100px]'>
                       <div className='flex flex-col max-w-lg gap-4'>
                         <p className='text-6xl font-bold text-text-primary'>
                           {slide.title}
                         </p>
                         <p className='text-text-subtle'>{slide.description}</p>
                       </div>
-                      <div className='relative w-[633px] aspect-[633/480] rounded-xl overflow-hidden bg-gray-200'>
-                        <Image
-                          src={slide.imageUrl}
-                          alt={slide.title}
-                          layout='fill'
-                          objectFit='cover'
-                        />
-                      </div>
+                      <div
+                        className={`relative min-w-[595px] aspect-[633/480] rounded-xl overflow-hidden bg-cover bg-no-repeat
+                        ${index === 0 ? 'bg-hero-image-1' : ''}
+                        ${index === 1 ? 'bg-hero-image-2' : ''}
+                        ${index === 2 ? 'bg-hero-image-3' : ''}
+                        `}
+                      ></div>
                     </div>
                   </CarouselItem>
                 ))}
@@ -127,7 +128,10 @@ export default function Home() {
             ))}
           </div>
         </Wrapper>
+      </div>
 
+      {/* ===== MAIN CONTENT SECTIONS ===== */}
+      <div className='flex flex-col items-center py-20'>
         <Wrapper id={'features'} className={'flex flex-col items-center mt-20'}>
           <p className='font-bold text-[30px] mb-2'>Key Features</p>
           <p className='text-lg'>
@@ -229,23 +233,25 @@ export default function Home() {
         <Wrapper
           id={'about-us'}
           className={
-            'flex flex-col md:flex-row gap-12 lg:gap-24 items-center mt-20'
+            'flex flex-col md:flex-row gap-12 lg:gap-[30px] items-center mt-20'
           }
         >
-          <div className='relative w-full md:min-w-[514px] h-[462px] rounded-xl overflow-hidden bg-gray-200 bg-about-us-image bg-cover bg-no-repeat'></div>
+          <div className='relative w-full md:min-w-[514px] h-[462px] rounded-xl overflow-hidden bg-about-us-image bg-cover bg-no-repeat'></div>
           <div className='flex flex-col gap-[30px]'>
             <p className='text-[30px] font-bold'>About Cyclefy</p>
             <p className='text-base text-gray-600'>
-              Cyclefy is a campus-based initiative designed to foster a culture
-              of sustainability among students. We provide a platform for
-              donating, bartering, borrowing, recycling, and repairing items,
-              reducing waste and promoting a circular economy within the campus
-              community.
+              Cyclefy is a website-based digital platform designed to foster the
+              circular economy within the student community. Through a range of
+              services including donations, bartering, borrowing, recycling, and
+              item repairs, Cyclefy encourages students to reduce waste, share
+              resources, and make the most of items that are still in good
+              condition.
             </p>
             <p className='text-base text-gray-600'>
-              Our mission is to empower students to make conscious choices,
-              extend the life of products, and create a more sustainable and
-              collaborative environment for everyone.
+              The platform aims to create a sustainable ecosystem where students
+              can easily exchange, reuse, and repair goods, minimizing the need
+              for new purchases and promoting a more responsible consumption
+              model.
             </p>
           </div>
         </Wrapper>
@@ -280,23 +286,24 @@ const features = [
       'Recycle old items and repair what can be reused, contributing to a circular economy and reducing waste.',
   },
 ];
+
 const heroSlides = [
   {
-    title: 'Share More, Waste Less',
+    title: 'Welcome to Cyclefy!',
     description:
       'Join a community of students making a difference. Easily donate, barter, or borrow items to promote sustainability on campus.',
     imageUrl: 'https://images.unsplash.com/photo-1593113598332-cd288d649433',
   },
   {
-    title: 'Give Items a Second Chance',
+    title: 'Every Step Counts',
     description:
-      'Your pre-loved books, clothes, and electronics can find a new home. Our platform makes it easy to connect with others who need them.',
+      'Take action to reduce waste and protect the environment with Cyclefy.',
     imageUrl: 'https://images.unsplash.com/photo-1615464884358-2936f616082a',
   },
   {
-    title: 'Smart, Sustainable Campus Life',
+    title: 'Empower Your Future',
     description:
-      'Access what you need without the waste. From borrowing tools for a project to bartering for goods, live smarter and more sustainably.',
+      'By making sustainable choices today, you’re shaping a better tomorrow.',
     imageUrl: 'https://images.unsplash.com/photo-1542601904-82a1756411e2',
   },
 ];
