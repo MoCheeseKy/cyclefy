@@ -61,7 +61,7 @@ export default function SignIn() {
   };
 
   return (
-    <div className='flex items-center justify-center min-h-screen bg-background'>
+    <div className='flex items-center justify-center min-h-screen bg-no-repeat bg-cover bg-block-background'>
       <div className='w-[970px] max-w-full flex overflow-hidden rounded-bl-[36px] rounded-tr-[36px] shadow-lg bg-background'>
         {/* Left Panel */}
         <div className='flex flex-col items-center justify-center w-1/2 px-12 py-12 text-background rounded-tr-[36px] bg-primary'>

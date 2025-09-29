@@ -13,6 +13,8 @@ module.exports = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'logo': "url('/images/logo.svg')",
+        'block-background': "url('/images/block-background.svg')",
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -32,7 +34,7 @@ module.exports = {
         'status': {
           'success': '#28a745',
           'info': '#17a2b8',
-          'error': '#dc3545', // Nama 'failed' diganti 'error' untuk konsistensi
+          'error': '#dc3545',
           'warning': '#ffc107',
         },
         foreground: 'hsl(var(--foreground))',

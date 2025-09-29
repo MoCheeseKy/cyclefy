@@ -5,7 +5,7 @@ import ResetPasswordForm from '@/components/ForgotPassword/ResetPasswordForm';
 import ResetSuccess from '@/components/ForgotPassword/ResetSuccess';
 
 export default function ForgotPasswordPage() {
-  const [step, setStep] = useState(4);
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
 
@@ -27,7 +27,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className='flex items-center justify-center min-h-screen p-4 bg-gray-100'>
+    <div className='flex items-center justify-center min-h-screen p-4 bg-no-repeat bg-cover bg-block-background'>
       {renderStep()}
     </div>
   );
