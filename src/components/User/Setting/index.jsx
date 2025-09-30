@@ -28,6 +28,7 @@ export default function MyAccount() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [openModal, setOpenModal] = useState({});
+  const [uploading, setUploading] = useState(false);
 
   const fetchProfile = useCallback(
     async (showLoading = true) => {
@@ -143,6 +144,52 @@ export default function MyAccount() {
     }
   };
 
+  const handleUploadProfilePicture = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const token = localStorage.getItem('cyclefy_user_token');
+    const formData = new FormData();
+    formData.append('profile_picture', file);
+
+    setUploading(true);
+    try {
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_HOST}/users/current/profile-picture`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      const newProfilePicture = response.data.data.profile_picture;
+
+      toast({
+        title: 'Success',
+        description: 'Profile picture updated successfully!',
+      });
+
+      setProfile((prev) => ({
+        ...prev,
+        profilePicture: newProfilePicture,
+      }));
+
+      fetchProfile();
+    } catch (error) {
+      console.error('Profile picture upload failed:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Upload Failed',
+        description: error.response?.data?.message || 'An error occurred.',
+      });
+    } finally {
+      setUploading(false);
+      event.target.value = ''; // reset input supaya bisa pilih file sama lagi
+    }
+  };
+
   if (isLoading) {
     return (
       <div className='flex justify-center items-center min-h-[60vh]'>
@@ -155,6 +202,7 @@ export default function MyAccount() {
     <div className='flex justify-center py-10 md:py-20'>
       <Wrapper>
         <div className='flex flex-col gap-12 md:flex-row'>
+          {/* Profile Picture */}
           <div className='flex flex-col items-center w-full gap-3 md:w-64'>
             <div
               className='w-40 h-40 bg-gray-300 bg-center bg-cover rounded-full'
@@ -164,12 +212,28 @@ export default function MyAccount() {
                 })`,
               }}
             ></div>
-            <button className='px-4 py-2 text-sm text-white bg-green-700 rounded hover:bg-green-800'>
-              Select Image
-            </button>
+
+            {/* Hidden input untuk upload */}
+            <input
+              type='file'
+              id='profilePictureInput'
+              accept='image/png,image/jpeg'
+              className='hidden'
+              onChange={handleUploadProfilePicture}
+            />
+            <label
+              htmlFor='profilePictureInput'
+              className={`px-4 py-2 text-sm text-white rounded cursor-pointer ${
+                uploading ? 'bg-gray-500' : 'bg-green-700 hover:bg-green-800'
+              }`}
+            >
+              {uploading ? 'Uploading...' : 'Select Image'}
+            </label>
+
             <p className='text-xs text-gray-500'>JPEG/PNG, max 5 MB</p>
           </div>
 
+          {/* Profile Settings */}
           <div className='flex-1'>
             <h2 className='mb-6 text-xl font-bold'>Profile Settings</h2>
 
@@ -203,6 +267,7 @@ export default function MyAccount() {
               </div>
             ))}
 
+            {/* Address Section */}
             <div className='flex flex-col items-start gap-1 mb-4 md:flex-row md:gap-6'>
               <p className='w-auto text-base font-semibold text-black md:w-32'>
                 Address
@@ -241,6 +306,7 @@ export default function MyAccount() {
               </div>
             </div>
 
+            {/* Contact Section */}
             <div className='flex flex-col items-start gap-1 md:flex-row md:gap-6'>
               <p className='w-auto text-base font-semibold text-black md:w-32'>
                 Contact Number
@@ -281,6 +347,7 @@ export default function MyAccount() {
           </div>
         </div>
 
+        {/* Modals */}
         <FullNameModal
           isOpen={openModal.fullName}
           onClose={() => setOpenModal({})}
