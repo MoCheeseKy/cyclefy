@@ -1,16 +1,13 @@
 import Link from 'next/link';
 import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { FaFacebook, FaGoogle, FaTwitter } from 'react-icons/fa';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-
 import axios from 'axios';
+import { Facebook, Chrome, Twitter } from 'lucide-react';
 
 export default function SignIn() {
-  const router = useRouter();
   const { toast } = useToast();
   const [form, setForm] = useState({
     identifier: '',
@@ -47,44 +44,47 @@ export default function SignIn() {
           description: response?.data?.message || 'Login successful!',
         });
         setLoading(false);
-        router.push('/');
+        window.location.href = '/';
       })
       .catch((error) => {
         toast({
           variant: 'destructive',
           title: 'Failed',
           description:
-            error?.data?.message || 'Email atau password salah. Coba lagi.',
+            error?.response?.data?.message ||
+            'Email or password incorrect. Please try again.',
         });
         setLoading(false);
       });
   };
 
   return (
-    <div className='flex items-center justify-center min-h-screen bg-no-repeat bg-cover bg-block-background'>
-      <div className='w-[970px] max-w-full flex overflow-hidden rounded-bl-[36px] rounded-tr-[36px] shadow-lg bg-background'>
+    <div className='flex items-center justify-center min-h-screen px-4 py-8 bg-no-repeat bg-cover bg-block-background'>
+      <div className='w-full max-w-sm md:max-w-4xl flex flex-col md:flex-row overflow-hidden rounded-lg md:rounded-bl-[36px] md:rounded-tr-[36px] shadow-lg bg-background'>
         {/* Left Panel */}
-        <div className='flex flex-col items-center justify-center w-1/2 px-12 py-12 text-background rounded-tr-[36px] bg-primary'>
-          <div className='max-w-xs text-center'>
+        <div className='flex flex-col items-center justify-center w-full p-8 text-center md:w-1/2 md:px-12 md:py-12 text-background bg-primary md:rounded-tr-[36px]'>
+          <div className='w-full max-w-xs'>
             <h2 className='mb-2 text-2xl font-bold'>
               Welcome Back to Cyclefy!
             </h2>
-            <p className='mb-6 text-sm'>Lorem Ipsum dolor sit amet.</p>
-            <p className='mb-2 text-sm'>Dont have an account? </p>
+            <p className='mb-6 text-sm'>
+              Don{"'"}t have an account? Join our community to start making a
+              difference.
+            </p>
             <Button
-              onClick={() => router.push('/register')}
+              onClick={() => (window.location.href = '/register')}
               className='w-full mb-6 bg-background text-primary hover:bg-white'
             >
-              Sign In
+              Sign Up
             </Button>
           </div>
-          <div className='bg-logo bg-no-repeat bg-cover w-[136px] aspect-[135/40]'></div>
+          <div className='hidden bg-logo bg-no-repeat bg-cover w-[136px] aspect-[135/40] md:block mt-4'></div>
         </div>
 
         {/* Right Panel */}
-        <div className='flex items-center justify-center w-1/2 px-12 py-12 bg-background'>
+        <div className='flex items-center justify-center w-full p-8 md:w-1/2 md:px-12 md:py-12 bg-background'>
           <form onSubmit={handleSubmit} className='w-full max-w-md'>
-            <h1 className='mb-6 text-2xl font-bold text-text-primary'>
+            <h1 className='mb-6 text-2xl font-bold text-center text-text-primary md:text-left'>
               Sign In To Cyclefy
             </h1>
 
@@ -95,7 +95,7 @@ export default function SignIn() {
               name='identifier'
               value={form.identifier}
               onChange={handleChange}
-              placeholder='Enter your email address or username'
+              placeholder='Enter your email or username'
               className='mb-4'
             />
 
@@ -111,7 +111,7 @@ export default function SignIn() {
               className='mb-2'
             />
 
-            <div className='flex items-center justify-between mb-6'>
+            <div className='flex flex-col items-start gap-2 mb-6 sm:flex-row sm:items-center sm:justify-between'>
               <label className='flex items-center gap-2 text-sm text-text-primary'>
                 <Checkbox
                   checked={form.remember}
@@ -119,7 +119,7 @@ export default function SignIn() {
                     setForm((prev) => ({ ...prev, remember: checked }))
                   }
                 />
-                Remember me?
+                Remember me
               </label>
               <Link
                 href='/login/forgot-password'
@@ -144,9 +144,9 @@ export default function SignIn() {
             </div>
 
             <div className='flex justify-center gap-4 text-xl text-text-primary'>
-              <FaFacebook className='cursor-pointer hover:text-action' />
-              <FaGoogle className='cursor-pointer hover:text-action' />
-              <FaTwitter className='cursor-pointer hover:text-action' />
+              <Facebook className='cursor-pointer hover:text-action' />
+              <Chrome className='cursor-pointer hover:text-action' />
+              <Twitter className='cursor-pointer hover:text-action' />
             </div>
           </form>
         </div>

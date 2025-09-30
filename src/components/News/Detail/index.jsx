@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -59,7 +59,7 @@ export default function NewsDetail() {
     if (isLoading) {
       return (
         <div className='flex items-center justify-center h-96'>
-          <Loader2 className='w-10 h-10 text-gray-400 animate-spin' />
+          <Loader2 className='w-10 h-10 text-primary animate-spin' />
         </div>
       );
     }
@@ -73,7 +73,7 @@ export default function NewsDetail() {
           </p>
           <Button
             onClick={() => router.push('/news/discover')}
-            className='mt-4'
+            className='mt-4 bg-primary hover:bg-primary/90'
           >
             Back to News
           </Button>
@@ -83,29 +83,27 @@ export default function NewsDetail() {
 
     return (
       <>
-        <div className='flex items-center gap-2 mb-8 text-sm text-gray-500'>
+        <div className='flex flex-wrap items-center gap-2 mb-6 text-sm text-gray-500 md:mb-8 md:text-base'>
           <Link href='/' className='hover:text-primary'>
             Cyclefy
           </Link>
           <ChevronRight className='w-4 h-4' />
-          <Link href='/#news' className='hover:text-primary'>
+          <Link href='/news/discover' className='hover:text-primary'>
             News
           </Link>
           <ChevronRight className='w-4 h-4' />
-          <span className='font-semibold font-bold text-tertiary'>
+          <span className='font-semibold truncate text-primary'>
             {newsData.title}
           </span>
         </div>
 
-        {/* Main Content */}
         <div className='grid grid-cols-1 gap-8 lg:grid-cols-5 lg:gap-12'>
-          {/* Image */}
           <div className='lg:col-span-2'>
-            <div className='relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-lg'>
+            <div className='relative w-full overflow-hidden shadow-lg aspect-video md:aspect-[4/3] rounded-xl'>
               <Image
                 src={
                   newsData.images?.[0] ||
-                  'https://dummyimage.com/600x400/e0e0e0/000&text=News'
+                  'https://placehold.co/600x400/e0e0e0/000?text=News'
                 }
                 alt={newsData.title}
                 layout='fill'
@@ -115,10 +113,10 @@ export default function NewsDetail() {
           </div>
 
           <div className='lg:col-span-3'>
-            <h1 className='text-4xl font-bold text-gray-800'>
+            <h1 className='text-2xl font-bold text-gray-800 md:text-4xl'>
               {newsData.title}
             </h1>
-            <div className='flex flex-col flex-wrap mt-4 text-gray-500 gap-x-6 gap-y-2'>
+            <div className='flex flex-col flex-wrap mt-4 text-gray-500 gap-x-6 gap-y-2 sm:flex-row'>
               <div className='flex items-center gap-2'>
                 <User className='w-4 h-4' />
                 <span>{newsData.author?.fullname || 'Admin'}</span>
@@ -132,7 +130,7 @@ export default function NewsDetail() {
                 </span>
               </div>
             </div>
-            <div className='mt-6 space-y-6 text-lg leading-relaxed text-gray-700 whitespace-pre-wrap'>
+            <div className='mt-6 space-y-6 text-base leading-relaxed text-gray-700 whitespace-pre-wrap md:text-lg'>
               {(newsData.content || '')
                 .split('\n\n')
                 .map((paragraph, index) => (
@@ -146,7 +144,7 @@ export default function NewsDetail() {
   };
 
   return (
-    <div className='flex justify-center py-20 bg-gray-50'>
+    <div className='flex justify-center py-10 bg-gray-50 md:py-20'>
       <Wrapper>{renderContent()}</Wrapper>
     </div>
   );

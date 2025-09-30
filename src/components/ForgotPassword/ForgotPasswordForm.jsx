@@ -1,12 +1,12 @@
-// components/Auth/ForgotPasswordForm.jsx
-
 import { useState } from 'react';
 import axios from 'axios';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+
 import { Loader2 } from 'lucide-react';
 
+// Step 1: Form untuk memasukkan email
 export default function ForgotPasswordForm({ setEmail, setStep }) {
   const [currentEmail, setCurrentEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -21,16 +21,16 @@ export default function ForgotPasswordForm({ setEmail, setStep }) {
         { email: currentEmail }
       );
       setEmail(currentEmail);
-      setStep(2); // Lanjut ke langkah verifikasi OTP
+      setStep(2);
       toast({
-        title: 'OTP Sent',
-        description: 'Please check your email for the reset code.',
+        title: 'OTP Terkirim',
+        description: 'Silakan periksa email Anda untuk kode reset.',
       });
     } catch (error) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: error.response?.data?.message || 'Failed to send OTP.',
+        description: error.response?.data?.message || 'Gagal mengirim OTP.',
       });
     } finally {
       setIsLoading(false);
@@ -40,12 +40,12 @@ export default function ForgotPasswordForm({ setEmail, setStep }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className='w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-2xl'
+      className='w-full max-w-md p-6 space-y-6 bg-white shadow-lg sm:p-8 rounded-2xl'
     >
       <div className='text-center'>
-        <h1 className='text-2xl font-bold'>Forgot Password?</h1>
-        <p className='mt-2 text-gray-600'>
-          Don{"'"}t worry! We{"'"}ll help you reset your password.
+        <h1 className='text-xl font-bold md:text-2xl'>Lupa Password?</h1>
+        <p className='mt-2 text-sm text-gray-600 md:text-base'>
+          Jangan khawatir! Kami akan membantu Anda mengatur ulang password Anda.
         </p>
       </div>
       <div>
@@ -55,15 +55,19 @@ export default function ForgotPasswordForm({ setEmail, setStep }) {
         <Input
           id='email'
           type='email'
-          placeholder='Enter your email'
+          placeholder='Masukkan email Anda'
           value={currentEmail}
           onChange={(e) => setCurrentEmail(e.target.value)}
           required
           className='mt-1'
         />
       </div>
-      <Button type='submit' disabled={isLoading} className='w-full text-white'>
-        {isLoading ? <Loader2 className='animate-spin' /> : 'Next'}
+      <Button
+        type='submit'
+        disabled={isLoading}
+        className='w-full text-white bg-primary hover:bg-primary/90'
+      >
+        {isLoading ? <Loader2 className='animate-spin' /> : 'Selanjutnya'}
       </Button>
     </form>
   );

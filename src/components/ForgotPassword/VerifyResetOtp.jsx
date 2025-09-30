@@ -31,6 +31,14 @@ export default function VerifyResetOtp({ email, setOtp, setStep }) {
   }, [resendCooldown]);
 
   const handleVerify = async () => {
+    if (currentOtp.length < 4) {
+      toast({
+        variant: 'destructive',
+        title: 'OTP Tidak Valid',
+        description: 'Silakan masukkan kode 4 digit.',
+      });
+      return;
+    }
     setIsLoading(true);
     try {
       await axios.post(
@@ -38,12 +46,12 @@ export default function VerifyResetOtp({ email, setOtp, setStep }) {
         { email, otp: currentOtp }
       );
       setOtp(currentOtp);
-      setStep(3); // Lanjut ke langkah set password baru
+      setStep(3);
     } catch (error) {
       toast({
         variant: 'destructive',
-        title: 'Verification Failed',
-        description: error.response?.data?.message || 'Invalid OTP.',
+        title: 'Verifikasi Gagal',
+        description: error.response?.data?.message || 'OTP tidak valid.',
       });
     } finally {
       setIsLoading(false);
@@ -58,25 +66,28 @@ export default function VerifyResetOtp({ email, setOtp, setStep }) {
         `${process.env.NEXT_PUBLIC_HOST}/send-reset-password-otp`,
         { email }
       );
-      toast({ title: 'OTP Resent', description: 'A new OTP has been sent.' });
+      toast({
+        title: 'OTP Terkirim Ulang',
+        description: 'OTP baru telah dikirim.',
+      });
       setResendCooldown(30);
     } catch (error) {
       setCanResend(true);
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Failed to resend OTP.',
+        description: 'Gagal mengirim ulang OTP.',
       });
     }
   };
 
   return (
-    <div className='w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-2xl'>
+    <div className='w-full max-w-md p-6 space-y-6 bg-white shadow-lg sm:p-8 rounded-2xl'>
       <div className='text-center'>
-        <h1 className='text-2xl font-bold'>Verify your email address</h1>
-        <p className='mt-2 text-gray-600'>
-          We{"'"}ve sent a code to{' '}
-          <span className='font-semibold'>{email}</span> to reset your password.
+        <h1 className='text-xl font-bold md:text-2xl'>Verifikasi Email Anda</h1>
+        <p className='mt-2 text-sm text-gray-600 md:text-base'>
+          Kami telah mengirimkan kode ke{' '}
+          <span className='font-semibold'>{email}</span>.
         </p>
       </div>
       <div className='flex justify-center'>
@@ -90,21 +101,21 @@ export default function VerifyResetOtp({ email, setOtp, setStep }) {
         </InputOTP>
       </div>
       <div className='text-sm text-center'>
-        Didn{"'"}t receive a code?{' '}
+        Tidak menerima kode?{' '}
         <button
           onClick={handleResend}
           disabled={!canResend}
           className='font-semibold text-primary disabled:text-gray-400'
         >
-          {canResend ? 'Resend' : `Resend in ${resendCooldown}s`}
+          {canResend ? 'Kirim Ulang' : `Kirim ulang dalam ${resendCooldown}s`}
         </button>
       </div>
       <Button
         onClick={handleVerify}
         disabled={isLoading}
-        className='w-full text-white'
+        className='w-full text-white bg-primary hover:bg-primary/90'
       >
-        {isLoading ? <Loader2 className='animate-spin' /> : 'Verify Email'}
+        {isLoading ? <Loader2 className='animate-spin' /> : 'Verifikasi'}
       </Button>
     </div>
   );

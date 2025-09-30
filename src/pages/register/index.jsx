@@ -1,13 +1,11 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { FaFacebook, FaGoogle, FaTwitter } from 'react-icons/fa';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
+import { Facebook, Chrome, Twitter } from 'lucide-react'; // Menggunakan ikon dari lucide-react
 
 export default function SignUp() {
-  const router = useRouter();
   const { toast } = useToast();
   const [form, setForm] = useState({
     username: '',
@@ -32,8 +30,9 @@ export default function SignUp() {
     if (form.password !== form.confirmPassword) {
       toast({
         variant: 'destructive',
-        title: 'Password tidak cocok ❌',
-        description: 'Pastikan password dan konfirmasi password sama.',
+        title: 'Password mismatch ❌',
+        description:
+          'Please ensure password and confirm password are the same.',
       });
       setLoading(false);
       return;
@@ -51,21 +50,22 @@ export default function SignUp() {
       );
 
       toast({
-        title: 'Registrasi Berhasil 🎉',
+        title: 'Registration Successful 🎉',
         description:
-          response.data.message || 'Silakan cek email Anda untuk kode OTP.',
+          response.data.message || 'Please check your email for the OTP code.',
       });
 
-      // PERUBAHAN: Arahkan ke /register/otp dengan email sebagai query parameter
-      router.push(`/register/otp?email=${encodeURIComponent(form.email)}`);
+      window.location.href = `/register/otp?email=${encodeURIComponent(
+        form.email
+      )}`;
     } catch (error) {
       console.error('Registration failed:', error);
       toast({
         variant: 'destructive',
-        title: 'Registrasi Gagal ❌',
+        title: 'Registration Failed ❌',
         description:
           error.response?.data?.message ||
-          'Terjadi kesalahan. Silakan coba lagi.',
+          'An error occurred. Please try again.',
       });
     } finally {
       setLoading(false);
@@ -73,12 +73,12 @@ export default function SignUp() {
   };
 
   return (
-    <div className='flex items-center justify-center min-h-screen bg-no-repeat bg-cover bg-block-background'>
-      <div className='w-[970px] max-w-full flex overflow-hidden rounded-bl-[36px] rounded-tr-[36px] shadow-lg bg-primary'>
-        {/* Left Panel */}
-        <div className='w-1/2 bg-background px-12 py-12 flex items-center justify-center rounded-tr-[36px]'>
+    <div className='flex items-center justify-center min-h-screen px-4 py-8 bg-no-repeat bg-cover bg-block-background'>
+      <div className='w-full max-w-sm md:max-w-4xl flex flex-col-reverse md:flex-row overflow-hidden rounded-lg md:rounded-bl-[36px] md:rounded-tr-[36px] shadow-lg bg-primary'>
+        {/* Left Panel (Form) */}
+        <div className='w-full bg-background p-8 md:px-12 md:py-12 flex items-center justify-center md:w-1/2 md:rounded-tr-[36px]'>
           <form onSubmit={handleSubmit} className='w-full max-w-md'>
-            <h1 className='mb-6 text-2xl font-bold text-text-primary'>
+            <h1 className='mb-6 text-2xl font-bold text-center text-text-primary md:text-left'>
               Sign Up To Cyclefy
             </h1>
             <label className='block mb-2 text-sm font-semibold text-text-primary'>
@@ -136,27 +136,28 @@ export default function SignUp() {
               <hr className='flex-1 border-t' />
             </div>
             <div className='flex justify-center gap-4 text-xl text-text-primary'>
-              <FaFacebook className='cursor-pointer hover:text-action' />
-              <FaGoogle className='cursor-pointer hover:text-action' />
-              <FaTwitter className='cursor-pointer hover:text-action' />
+              <Facebook className='cursor-pointer hover:text-action' />
+              <Chrome className='cursor-pointer hover:text-action' />
+              <Twitter className='cursor-pointer hover:text-action' />
             </div>
           </form>
         </div>
 
-        {/* Right Panel */}
-        <div className='flex flex-col items-center justify-center w-1/2 px-12 py-12 bg-primary text-background'>
-          <div className='max-w-xs text-center'>
+        {/* Right Panel (Info) */}
+        <div className='flex flex-col items-center justify-center w-full p-8 text-center md:w-1/2 md:px-12 md:py-12 bg-primary text-background'>
+          <div className='w-full max-w-xs'>
             <h2 className='mb-2 text-2xl font-bold'>Welcome to Cyclefy!</h2>
-            <p className='mb-6 text-sm'>Lorem Ipsum dolor sit amet.</p>
-            <p className='mb-2 text-sm'>Already have an account?</p>
+            <p className='mb-6 text-sm'>
+              Already have an account? Sign in to continue your journey with us.
+            </p>
             <Button
-              onClick={() => router.push('/login')}
-              className='w-full mb-6 bg-background text-primary hover:opacity-90'
+              onClick={() => (window.location.href = '/login')}
+              className='w-full mb-6 bg-background text-primary hover:bg-white'
             >
               Sign In
             </Button>
           </div>
-          <div className='bg-logo bg-no-repeat bg-cover w-[136px] aspect-[135/40]'></div>
+          <div className='hidden bg-logo bg-no-repeat bg-cover w-[136px] aspect-[135/40] md:block mt-4'></div>
         </div>
       </div>
     </div>
