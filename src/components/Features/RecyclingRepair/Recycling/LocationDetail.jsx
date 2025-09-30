@@ -5,6 +5,8 @@ import { useToast } from '@/hooks/use-toast';
 import Wrapper from '@/components/_shared/Wrapper';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, MapPin, Phone, Loader2 } from 'lucide-react';
+import ConfirmLocationModal from './ConfirmLocationModal';
+import FinalSuccessModal from './FinalSuccessModal';
 
 export default function LocationDetail({ id, formDataFromParent, setPage }) {
   const { toast } = useToast();
@@ -14,6 +16,9 @@ export default function LocationDetail({ id, formDataFromParent, setPage }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
+
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -54,6 +59,7 @@ export default function LocationDetail({ id, formDataFromParent, setPage }) {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    setIsConfirmModalOpen(false);
     const token = localStorage.getItem('cyclefy_user_token');
     const endpoint = '/recycles';
     const baseUrl = process.env.NEXT_PUBLIC_HOST;
@@ -68,23 +74,13 @@ export default function LocationDetail({ id, formDataFromParent, setPage }) {
     finalFormData.append('recycle_location_id', id);
 
     try {
-      toast({
-        title: 'Submitting Request',
-        description: 'Please wait, your recycle request is being processed.',
-      });
-
       await axios.post(`${baseUrl}${endpoint}`, finalFormData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       });
-
-      toast({
-        title: 'Success! 🎉',
-        description: 'Your recycle request has been submitted successfully.',
-      });
-      setPage('form');
+      setIsSuccessModalOpen(true);
     } catch (err) {
       toast({
         variant: 'destructive',
@@ -124,27 +120,28 @@ export default function LocationDetail({ id, formDataFromParent, setPage }) {
   }
 
   return (
-    <div className='flex justify-center py-20 bg-[#F8F9FA]'>
+    <>
       <Wrapper>
-        <div className='flex flex-wrap items-center gap-2 mb-8 text-base font-medium'>
+        <div className='flex flex-wrap items-center gap-2 mb-8 text-sm font-medium md:text-base'>
           <Link href='/' className='text-text-primary'>
             Cyclefy
           </Link>
-          <ChevronRight className='text-text-primary' />
-          <Link href='/features' className='text-text-primary'>
-            Key Features
+          <ChevronRight className='w-4 h-4 text-text-primary' />
+          <Link
+            href='/features/recycling-repair/recycling'
+            className='text-text-primary'
+          >
+            Recycling
           </Link>
-          <ChevronRight className='text-text-primary' />
-          <Link href='/features/recycle-repair' className='text-text-primary'>
-            Recycle
-          </Link>
-          <ChevronRight className='text-secondary' />
-          <span className='truncate text-secondary'>{item.location_name}</span>
+          <ChevronRight className='w-4 h-4 text-text-primary' />
+          <span className='font-bold truncate text-tertiary'>
+            {item.location_name}
+          </span>
         </div>
         <div className='grid grid-cols-1 gap-8 lg:grid-cols-2'>
           <div>
             <div
-              className='w-full h-[400px] bg-gray-200 rounded-lg bg-cover bg-center mb-4 transition-all'
+              className='w-full h-64 md:h-[400px] bg-gray-200 rounded-lg bg-cover bg-center mb-4 transition-all'
               style={{ backgroundImage: `url(${selectedImage})` }}
             ></div>
             <div className='flex items-center gap-2 pb-2 overflow-x-auto'>
@@ -152,9 +149,9 @@ export default function LocationDetail({ id, formDataFromParent, setPage }) {
                 <button
                   key={index}
                   onClick={() => setSelectedImage(img)}
-                  className={`w-20 h-20 rounded-md overflow-hidden border-2 flex-shrink-0 ${
+                  className={`w-16 h-16 md:w-20 md:h-20 rounded-md overflow-hidden border-2 flex-shrink-0 ${
                     selectedImage === img
-                      ? 'border-green-600'
+                      ? 'border-primary'
                       : 'border-transparent'
                   }`}
                 >
@@ -167,7 +164,7 @@ export default function LocationDetail({ id, formDataFromParent, setPage }) {
             </div>
           </div>
           <div className='flex flex-col'>
-            <h1 className='text-4xl font-bold text-gray-800'>
+            <h1 className='text-3xl font-bold text-gray-800 md:text-4xl'>
               {item?.location_name}
             </h1>
             <div className='mt-4 space-y-3 text-gray-600'>
@@ -193,19 +190,26 @@ export default function LocationDetail({ id, formDataFromParent, setPage }) {
             </p>
             <div className='flex-grow'></div>
             <Button
-              onClick={handleSubmit}
+              onClick={() => setIsConfirmModalOpen(true)}
               disabled={isSubmitting}
-              className='w-full h-12 mt-8 text-lg text-white bg-green-800 hover:bg-green-700 disabled:bg-gray-400'
+              className='w-full h-12 mt-8 text-lg text-white bg-primary hover:bg-primary/90 disabled:bg-gray-400'
             >
-              {isSubmitting ? (
-                <Loader2 className='w-6 h-6 animate-spin' />
-              ) : (
-                'Select This Location'
-              )}
+              Select This Location
             </Button>
           </div>
         </div>
       </Wrapper>
-    </div>
+      <ConfirmLocationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleSubmit}
+        isLoading={isSubmitting}
+        locationName={item?.location_name}
+      />
+      <FinalSuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={() => setPage('form')}
+      />
+    </>
   );
 }

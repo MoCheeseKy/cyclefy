@@ -1,6 +1,4 @@
 import { useState } from 'react';
-
-// Import komponen dari Shadcn/UI
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -10,6 +8,7 @@ export default function ExistingItemsForm({
   items = [],
   selectedItemId,
   onSelectionChange,
+  error,
 }) {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -40,17 +39,17 @@ export default function ExistingItemsForm({
                 className={`w-full p-3 text-left border rounded-lg flex items-center gap-4 transition-all ${
                   selectedItemId === item.id
                     ? 'border-green-600 ring-2 ring-green-300'
-                    : 'border-gray-200'
+                    : 'border-gray-200 hover:bg-gray-50'
                 }`}
               >
                 <div
                   className='flex-shrink-0 w-16 h-16 bg-gray-200 bg-center bg-cover rounded-md'
                   style={{ backgroundImage: `url(${item.images[0]})` }}
                 ></div>
-                <div className='flex-grow'>
+                <div className='flex-grow min-w-0'>
                   <div className='flex items-start justify-between'>
-                    <p className='font-semibold'>{item.item_name}</p>
-                    <span className='px-2 py-1 text-xs text-green-800 bg-green-100 rounded-full'>
+                    <p className='font-semibold truncate'>{item.item_name}</p>
+                    <span className='flex-shrink-0 px-2 py-1 ml-2 text-xs text-green-800 bg-green-100 rounded-full'>
                       {item.category.name}
                     </span>
                   </div>
@@ -61,10 +60,13 @@ export default function ExistingItemsForm({
               </button>
             ))
           ) : (
-            <p className='text-sm text-center text-gray-500'>No items found.</p>
+            <p className='py-10 text-sm text-center text-gray-500'>
+              No items found.
+            </p>
           )}
         </div>
       </ScrollArea>
+      {error && <p className='mt-1 text-sm text-red-500'>{error}</p>}
     </div>
   );
 }

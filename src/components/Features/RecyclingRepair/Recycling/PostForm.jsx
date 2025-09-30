@@ -31,23 +31,24 @@ export default function PostRecyclingItemForm({ setFormData, setPage }) {
   const [images, setImages] = useState([]);
   const [agree, setAgree] = useState(false);
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDataLoading, setIsDataLoading] = useState(true);
 
   useEffect(() => {
     if (!router.isReady) return;
 
     const fetchData = async () => {
+      setIsDataLoading(true);
       const token = localStorage.getItem('cyclefy_user_token');
       if (!token) {
         toast({
           variant: 'destructive',
           title: 'Authentication Error',
-          description: 'You must be logged in to post an item.',
         });
+        setIsDataLoading(false);
         return;
       }
 
-      const headers = { 'Authorization': `Bearer ${token}` };
+      const headers = { Authorization: `Bearer ${token}` };
       try {
         const [categoryRes, addressRes, phoneRes] = await Promise.all([
           axios.get(`${process.env.NEXT_PUBLIC_HOST}/categories`, { headers }),
@@ -62,29 +63,27 @@ export default function PostRecyclingItemForm({ setFormData, setPage }) {
         setAddresses(addressRes.data.data || []);
         setPhones(phoneRes.data.data || []);
       } catch (error) {
-        console.error('Failed to fetch form data:', error);
         toast({
           variant: 'destructive',
           title: 'Failed to load data',
-          description: 'Could not fetch categories, addresses, or phones.',
         });
+      } finally {
+        setIsDataLoading(false);
       }
     };
     fetchData();
-  }, [router.isReady]);
+  }, [router.isReady, toast]);
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    const newImages = [];
     let validationError = null;
-
+    const newImages = [];
     files.forEach((file) => {
       if (images.length + newImages.length >= 5) {
         validationError = 'You can only upload a maximum of 5 images.';
         return;
       }
       if (file.size > 5 * 1024 * 1024) {
-        // 5 MB
         validationError = `File ${file.name} is too large. Max size is 5 MB.`;
         return;
       }
@@ -135,7 +134,6 @@ export default function PostRecyclingItemForm({ setFormData, setPage }) {
       return;
     }
 
-    setIsSubmitting(true);
     const formData = new FormData();
     formData.append('item_name', itemName);
     formData.append('description', description);
@@ -147,12 +145,11 @@ export default function PostRecyclingItemForm({ setFormData, setPage }) {
     });
     setFormData(formData);
     setPage('find-location');
-    setIsSubmitting(false);
   };
 
-  if (!router.isReady) {
+  if (!router.isReady || isDataLoading) {
     return (
-      <div className='flex items-center justify-center w-full max-w-[530px] h-fit bg-white rounded-[16px] p-6 shadow-md'>
+      <div className='flex items-center justify-center w-full max-w-lg p-6 bg-white rounded-lg shadow-md h-96'>
         <Loader2 className='w-6 h-6 animate-spin' />
         <span className='ml-2'>Loading form...</span>
       </div>
@@ -160,14 +157,14 @@ export default function PostRecyclingItemForm({ setFormData, setPage }) {
   }
 
   return (
-    <div className='w-full max-w-[530px] h-fit bg-white rounded-[16px] p-6 shadow-md'>
-      <h1 className='mb-4 text-2xl font-bold'>Recycling</h1>
+    <div className='w-full max-w-lg p-6 bg-white rounded-lg shadow-md h-fit'>
+      <h1 className='mb-4 text-2xl font-bold'>Recycling Details</h1>
       <form onSubmit={handleSubmit} className='space-y-4'>
         <div>
           <Label htmlFor='item-name'>Item Name</Label>
           <Input
             id='item-name'
-            placeholder='Enter item name...'
+            placeholder='e.g., Used Cardboard Box'
             value={itemName}
             onChange={(e) => setItemName(e.target.value)}
           />
@@ -179,7 +176,7 @@ export default function PostRecyclingItemForm({ setFormData, setPage }) {
           <Label htmlFor='description'>Description</Label>
           <Textarea
             id='description'
-            placeholder='Enter description...'
+            placeholder='e.g., Thick cardboard from a TV box...'
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
@@ -206,15 +203,15 @@ export default function PostRecyclingItemForm({ setFormData, setPage }) {
           )}
         </div>
         <div>
-          <Label htmlFor='address'>Address</Label>
+          <Label htmlFor='address'>Pickup Address</Label>
           <Select onValueChange={setAddressId} value={addressId}>
             <SelectTrigger id='address'>
-              <SelectValue placeholder='Select/add your address' />
+              <SelectValue placeholder='Select your address' />
             </SelectTrigger>
             <SelectContent>
               {addresses.map((addr) => (
                 <SelectItem key={addr.id} value={String(addr.id)}>
-                  {addr.address_name} - {addr.address}
+                  {addr.address_name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -227,7 +224,7 @@ export default function PostRecyclingItemForm({ setFormData, setPage }) {
           <Label htmlFor='contact'>Contact Number</Label>
           <Select onValueChange={setPhoneId} value={phoneId}>
             <SelectTrigger id='contact'>
-              <SelectValue placeholder='Select/add your contact number' />
+              <SelectValue placeholder='Select your contact number' />
             </SelectTrigger>
             <SelectContent>
               {phones.map((phone) => (
@@ -292,9 +289,17 @@ export default function PostRecyclingItemForm({ setFormData, setPage }) {
             ))}
           </div>
         )}
-        <div className='flex items-center space-x-2'>
-          <Checkbox id='terms' checked={agree} onCheckedChange={setAgree} />
-          <Label htmlFor='terms' className='text-sm font-normal'>
+        <div className='flex items-start space-x-3'>
+          <Checkbox
+            id='terms'
+            checked={agree}
+            onCheckedChange={setAgree}
+            className='mt-1'
+          />
+          <Label
+            htmlFor='terms'
+            className='text-sm font-normal leading-relaxed'
+          >
             I agree to the{' '}
             <a href='/terms' className='underline'>
               terms of service
@@ -309,16 +314,8 @@ export default function PostRecyclingItemForm({ setFormData, setPage }) {
         {errors.agree && (
           <p className='-mt-2 text-sm text-red-500'>{errors.agree}</p>
         )}
-        <Button
-          type='submit'
-          className='w-full bg-green-800 hover:bg-green-900'
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <Loader2 className='w-4 h-4 animate-spin' />
-          ) : (
-            'Recycle This Item'
-          )}
+        <Button type='submit' className='w-full bg-primary hover:bg-primary/90'>
+          Next: Find Location
         </Button>
       </form>
     </div>

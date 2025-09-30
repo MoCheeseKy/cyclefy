@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { MapPin } from 'lucide-react';
 
 export default function LocationCard({
@@ -8,7 +7,7 @@ export default function LocationCard({
 }) {
   const imageUrl =
     location.images?.[0] ||
-    'https://dummyimage.com/600x400/e0e0e0/000&text=No+Image';
+    'https://placehold.co/600x400/e0e0e0/000?text=No+Image';
   const categoriesText = location.categories.map((cat) => cat.name).join(', ');
 
   const handleClick = () => {
@@ -19,17 +18,16 @@ export default function LocationCard({
   return (
     <div
       onClick={handleClick}
-      className='flex h-48 overflow-hidden transition-shadow bg-white border border-gray-200 rounded-lg shadow-md cursor-pointer hover:shadow-lg'
+      className='flex flex-col h-full overflow-hidden transition-shadow bg-white border border-gray-200 rounded-lg shadow-md cursor-pointer md:flex-row md:h-48 hover:shadow-lg'
     >
-      <div className='relative flex-shrink-0 w-2/5 h-full'>
-        <Image
+      <div className='relative flex-shrink-0 w-full h-40 md:w-2/5 md:h-full'>
+        <img
           src={imageUrl}
           alt={location.location_name}
-          layout='fill'
-          objectFit='cover'
+          className='object-cover w-full h-full'
         />
       </div>
-      <div className='flex flex-col justify-center w-3/5 p-4'>
+      <div className='flex flex-col justify-center w-full p-4 md:w-3/5'>
         <h3 className='text-lg font-bold text-gray-800 line-clamp-1'>
           {location.location_name}
         </h3>
@@ -43,7 +41,7 @@ export default function LocationCard({
           {location.address}
         </p>
         {location.distance && (
-          <p className='flex items-center gap-1 text-sm font-semibold text-gray-700'>
+          <p className='flex items-center gap-1 mt-auto text-sm font-semibold text-gray-700'>
             <MapPin className='w-4 h-4 text-red-500' />
             {parseFloat(location.distance).toFixed(1)} km
           </p>

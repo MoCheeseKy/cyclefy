@@ -10,17 +10,14 @@ export default function PostRecyclingItem() {
   const [page, setPage] = useState('form');
   const [formData, setFormData] = useState(null);
   const [selectedLocationId, setSelectedLocationId] = useState(null);
-
-  // State untuk memastikan render hanya di client dan mengatasi hydration error
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Mencegah render komponen anak di server-side untuk menghindari error
   if (!isClient) {
-    return null;
+    return null; // Render nothing on the server
   }
 
   const renderCurrentPage = () => {
@@ -28,63 +25,56 @@ export default function PostRecyclingItem() {
       case 'form':
         return (
           <>
-            <div className='flex items-center gap-2 text-base font-medium'>
+            <div className='flex flex-wrap items-center gap-2 text-sm font-medium md:text-base'>
               <Link href='/' className='text-text-primary'>
                 Cyclefy
               </Link>
-              <ChevronRight className='text-text-primary' />
-              <Link href='/features' className='text-text-primary'>
-                Key Features
-              </Link>
-              <ChevronRight className='text-text-primary' />
+              <ChevronRight className='w-4 h-4 text-text-primary' />
               <Link
                 href='/features/recycling-repair'
                 className='text-text-primary'
               >
                 Recycling & Repair
               </Link>
-              <ChevronRight className='text-text-primary' />
-              <Link href='/features/repair' className='font-bold text-tertiary'>
-                Post Your Item
-              </Link>
+              <ChevronRight className='w-4 h-4 text-text-primary' />
+              <span className='font-bold text-tertiary'>Recycle Your Item</span>
             </div>
-            <div className='flex my-[10px] items-center gap-[10px]'>
-              <div className='w-[60px] h-[60px] bg-recycle-repair-logo bg-cover bg-no-repeat rounded-full' />
-              <p className='text-[30px] font-bold'>Recycling Your Item</p>
+            <div className='flex items-center gap-4 my-6'>
+              <div className='w-12 h-12 bg-no-repeat bg-cover rounded-full md:w-16 md:h-16 bg-recycle-repair-logo' />
+              <h1 className='text-2xl font-bold md:text-3xl'>
+                Recycle Your Item
+              </h1>
             </div>
-            <p className='text-lg'>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            <p className='text-base text-gray-600 md:text-lg'>
+              Give your unused items a second life. Post them for recycling and
+              let others repurpose or reuse them sustainably.
             </p>
-            <div className='flex flex-col lg:flex-row gap-[70px] mt-[30px] justify-between'>
-              <div className='flex flex-col gap-4'>
-                <p className='text-[30px] font-bold'>
+            <div className='flex flex-col gap-12 mt-8 lg:flex-row lg:gap-16 md:mt-12'>
+              <div className='flex flex-col flex-1 gap-6'>
+                <h2 className='text-2xl font-bold md:text-3xl'>
                   How To Recycle Your Item?
-                </p>
-                {/* Step 1 */}
+                </h2>
                 <div>
                   <div className='flex items-center gap-4 mb-2'>
-                    <div className='w-[48px] aspect-square rounded-full bg-primary text-white flex items-center justify-center font-bold text-[30px]'>
+                    <div className='flex items-center justify-center flex-shrink-0 w-12 h-12 text-2xl font-bold text-white rounded-full md:text-3xl bg-primary'>
                       1
                     </div>
-                    <div className='text-xl font-bold'>
-                      Choose an Item to Recycle
+                    <div className='text-lg font-bold md:text-xl'>
+                      Choose an Item
                     </div>
                   </div>
-                  <p className='text-base pl-[62px]'>
+                  <p className='pl-16 text-base'>
                     Pick an item that you no longer use but still has parts or
-                    materials that can be recycled or repurposed (e.g., broken
-                    electronics, used containers, old furniture).
+                    materials that can be recycled or repurposed.
                   </p>
                 </div>
-                {/* Step 2 */}
                 <div>
                   <div className='flex items-center gap-4 mb-2'>
-                    <div className='w-[48px] aspect-square rounded-full bg-primary text-white flex items-center justify-center font-bold text-[30px]'>
+                    <div className='flex items-center justify-center flex-shrink-0 w-12 h-12 text-2xl font-bold text-white rounded-full md:text-3xl bg-primary'>
                       2
                     </div>
-                    <div className='text-xl font-bold'>
-                      Fill in the Recycling Form
+                    <div className='text-lg font-bold md:text-xl'>
+                      Fill in the Form
                     </div>
                   </div>
                   <p className='text-base pl-[62px]'>
@@ -99,28 +89,27 @@ export default function PostRecyclingItem() {
                     its condition.
                   </p>
                 </div>
-                {/* Step 3 */}
                 <div>
                   <div className='flex items-center gap-4 mb-2'>
-                    <div className='w-[48px] aspect-square rounded-full bg-primary text-white flex items-center justify-center font-bold text-[30px]'>
+                    <div className='flex items-center justify-center flex-shrink-0 w-12 h-12 text-2xl font-bold text-white rounded-full md:text-3xl bg-primary'>
                       3
                     </div>
-                    <div className='text-xl font-bold'>
-                      Submit for Recycling
+                    <div className='text-lg font-bold md:text-xl'>
+                      Find a Location
                     </div>
                   </div>
-                  <p className='text-base pl-[62px]'>
-                    Click Recycle This Item. Your post will appear on the
-                    Recycling List so others can request or pick it up for
-                    recycling or reuse purposes. Monitor updates via the
-                    Recycling History page.
+                  <p className='pl-16 text-base'>
+                    After submitting the form, find a suitable recycling
+                    location from the list provided to send your item to.
                   </p>
                 </div>
               </div>
-              <PostRecyclingItemForm
-                setFormData={setFormData}
-                setPage={setPage}
-              />
+              <div className='flex justify-center w-full lg:w-auto lg:justify-start'>
+                <PostRecyclingItemForm
+                  setFormData={setFormData}
+                  setPage={setPage}
+                />
+              </div>
             </div>
           </>
         );
@@ -146,7 +135,7 @@ export default function PostRecyclingItem() {
   };
 
   return (
-    <div className='flex justify-center py-20'>
+    <div className='flex justify-center py-10 bg-gray-50 md:py-20'>
       <Wrapper>{renderCurrentPage()}</Wrapper>
     </div>
   );

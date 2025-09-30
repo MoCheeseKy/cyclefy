@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
 
-// Komponen & Ikon
 import Wrapper from '@/components/_shared/Wrapper';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, User, MapPin, Phone, Loader2 } from 'lucide-react';
@@ -33,7 +32,6 @@ export default function Detail() {
         });
         if (response.data.success) {
           setItem(response.data.data);
-          // Atur gambar utama ke gambar pertama dari array
           if (
             response.data.data.images &&
             response.data.data.images.length > 0
@@ -78,57 +76,51 @@ export default function Detail() {
     );
   }
 
-  // Tentukan route untuk tombol request
   const requestType = discover_type === 'borrowing' ? 'borrow' : 'barter';
   const postTypeCapitalized =
     discover_type.charAt(0).toUpperCase() + discover_type.slice(1);
 
   return (
-    <div className='flex justify-center py-20 bg-[#F8F9FA]'>
+    <div className='flex justify-center py-10 bg-[#F8F9FA] md:py-20'>
       <Wrapper>
-        {/* Breadcrumbs */}
-        <div className='flex items-center gap-2 mb-8 text-base font-medium'>
+        <div className='flex flex-wrap items-center gap-2 mb-8 text-sm font-medium md:text-base'>
           <Link href='/' className='text-text-primary'>
             Cyclefy
           </Link>
-          <ChevronRight className='text-text-primary' />
-          <Link href='/' className='text-text-primary'>
-            Key Features
-          </Link>
-          <ChevronRight className='text-text-primary' />
+          <ChevronRight className='w-4 h-4 text-text-primary' />
           <Link
             href={`/features/${discover_type}`}
             className='text-text-primary'
           >
             {postTypeCapitalized}
           </Link>
-          <ChevronRight className='text-text-primary' />
+          <ChevronRight className='w-4 h-4 text-text-primary' />
           <Link
-            href={`/features/${discover_type}`}
+            href={`/features/discover/${discover_type}`}
             className='text-text-primary'
           >
-            Search for Items to {postTypeCapitalized}
+            Search for Items
           </Link>
-          <ChevronRight className='text-text-primary' />
-          <span className='font-bold text-tertiary'>{item.item_name}</span>
+          <ChevronRight className='w-4 h-4 text-text-primary' />
+          <span className='font-bold truncate text-tertiary'>
+            {item.item_name}
+          </span>
         </div>
 
-        {/* Konten Detail */}
         <div className='grid grid-cols-1 gap-8 lg:grid-cols-2'>
-          {/* Kolom Kiri: Gambar */}
           <div>
             <div
-              className='w-full h-[400px] bg-gray-200 rounded-lg bg-cover bg-center mb-4'
+              className='w-full h-64 bg-gray-200 rounded-lg bg-cover bg-center mb-4 transition-all sm:h-80 lg:h-[400px]'
               style={{ backgroundImage: `url(${selectedImage})` }}
             ></div>
-            <div className='flex items-center gap-2'>
+            <div className='flex items-center gap-2 pb-2 overflow-x-auto'>
               {item.images.map((img, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(img)}
-                  className={`w-20 h-20 rounded-md overflow-hidden border-2 ${
+                  className={`w-16 h-16 md:w-20 md:h-20 rounded-md overflow-hidden border-2 flex-shrink-0 transition-colors ${
                     selectedImage === img
-                      ? 'border-green-600'
+                      ? 'border-primary'
                       : 'border-transparent'
                   }`}
                 >
@@ -141,19 +133,20 @@ export default function Detail() {
             </div>
           </div>
 
-          {/* Kolom Kanan: Info */}
           <div className='flex flex-col'>
-            <span className='self-start px-3 py-1 mb-2 text-sm text-white bg-green-600 rounded-full'>
+            <span className='self-start px-3 py-1 mb-2 text-sm text-white rounded-full bg-primary'>
               {item.category.name}
             </span>
-            <h1 className='text-4xl font-bold'>{item.item_name}</h1>
+            <h1 className='text-2xl font-bold text-gray-800 md:text-4xl'>
+              {item?.item_name}
+            </h1>
             <div className='mt-4 space-y-3 text-gray-600'>
               <div className='flex items-center gap-2'>
                 <User size={18} />
                 <span>{item.user.username}</span>
               </div>
-              <div className='flex items-center gap-2'>
-                <MapPin size={18} />
+              <div className='flex items-start gap-2'>
+                <MapPin size={18} className='flex-shrink-0 mt-1' />
                 <span>
                   {item.address.address} ({item.distance?.toFixed(1)} km)
                 </span>
@@ -163,15 +156,12 @@ export default function Detail() {
                 <span>{item.phone.number}</span>
               </div>
             </div>
-            <p className='mt-6 text-gray-700'>{item.description}</p>
+            <p className='mt-6 text-gray-700 whitespace-pre-wrap'>
+              {item?.description}
+            </p>
             <div className='flex-grow'></div>
-            <Link
-              href={`/features/request/${
-                requestType === 'borrow' ? 'borrowing' : requestType
-              }/${id}`}
-              passHref
-            >
-              <Button className='w-full h-12 mt-8 text-lg bg-green-800 hover:bg-green-700'>
+            <Link href={`/features/request/${discover_type}/${id}`}>
+              <Button className='w-full h-12 mt-8 text-lg bg-primary hover:bg-primary/90'>
                 Request This Item
               </Button>
             </Link>

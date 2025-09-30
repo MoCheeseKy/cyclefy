@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ChevronRight, ArrowUpDown } from 'lucide-react';
+import { ChevronRight, ArrowUpDown, Loader2, Search } from 'lucide-react';
 
 const defaultFilters = {
   categories: [],
@@ -95,7 +95,6 @@ export default function Discover() {
           filters.from || filters.to ? undefined : filters.days || undefined,
       };
     }
-    // Untuk 'barter', 'params' dasar sudah cukup.
 
     try {
       const response = await axios.get(`${baseUrl}${endpoint}`, {
@@ -128,12 +127,16 @@ export default function Discover() {
         console.error('Failed to fetch categories:', error);
       }
     };
-    fetchCategories();
-  }, []);
+    if (router.isReady) {
+      fetchCategories();
+    }
+  }, [router.isReady]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (router.isReady) {
+      fetchData();
+    }
+  }, [fetchData, router.isReady]);
 
   const handleSearch = () => {
     setPage(1);
@@ -145,45 +148,85 @@ export default function Discover() {
     setFilters(newFilters);
   };
 
+  const renderPaginationItems = () => {
+    const total = meta.totalPages;
+    const current = page;
+    const pages = [];
+    const range = 2;
+
+    if (total <= 1) return null;
+
+    if (total <= 5) {
+      for (let i = 1; i <= total; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (current > range + 1) pages.push('...');
+      for (
+        let i = Math.max(2, current - range);
+        i <= Math.min(total - 1, current + range);
+        i++
+      ) {
+        pages.push(i);
+      }
+      if (current < total - range) pages.push('...');
+      pages.push(total);
+    }
+
+    return pages.map((p, index) => (
+      <PaginationItem key={`${p}-${index}`}>
+        {p === '...' ? (
+          <span className='px-4 py-2'>...</span>
+        ) : (
+          <PaginationLink
+            href='#'
+            isActive={page === p}
+            onClick={(e) => {
+              e.preventDefault();
+              setPage(p);
+            }}
+          >
+            {p}
+          </PaginationLink>
+        )}
+      </PaginationItem>
+    ));
+  };
+
   return (
-    <div className='flex justify-center py-20 bg-[#F8F9FA]'>
+    <div className='flex justify-center py-10 bg-[#F8F9FA] md:py-20'>
       <Wrapper>
-        {/* Breadcrumbs dan Header */}
-        <div className='flex items-center gap-2 text-base font-medium'>
+        <div className='flex flex-wrap items-center gap-2 text-sm font-medium md:text-base'>
           <Link href='/' className='text-text-primary'>
             Cyclefy
           </Link>
-          <ChevronRight className='text-text-primary' />
+          <ChevronRight className='w-4 h-4 text-text-primary' />
           <Link href='/' className='text-text-primary'>
             Key Features
           </Link>
-          <ChevronRight className='text-text-primary' />
+          <ChevronRight className='w-4 h-4 text-text-primary' />
           <Link
             href={`/features/${discover_type}`}
             className='text-text-primary'
           >
             {PostType}
           </Link>
-          <ChevronRight className='text-text-primaary' />
-          <Link href='/' className='font-bold text-tertiary'>
-            Search for Items to {PostType}
-          </Link>
+          <ChevronRight className='w-4 h-4 text-text-primary' />
+          <span className='font-bold text-tertiary'>Search for Items</span>
         </div>
-        <div className='flex my-[10px] items-center gap-[10px]'>
+        <div className='flex items-center gap-4 my-6'>
           <div
-            className={`w-[60px] h-[60px] ${
-              discover_type === 'donation'
-                ? 'bg-donation-logo'
-                : discover_type === 'barter'
+            className={`w-12 h-12 md:w-16 md:h-16 bg-cover bg-center rounded-full ${
+              discover_type === 'barter'
                 ? 'bg-barter-logo'
                 : 'bg-borrowing-logo'
-            } rounded-full`}
+            }`}
           />
-          <p className='text-[30px] font-bold'>Search Item for {PostType}</p>
+          <h1 className='text-2xl font-bold md:text-3xl'>
+            Search Item for {PostType}
+          </h1>
         </div>
-        <p className='text-lg '>{PostDescription}</p>
+        <p className='text-base text-gray-600 md:text-lg'>{PostDescription}</p>
 
-        {/* Kontrol Search dan Filter */}
         <div className='mt-8'>
           <div className='flex flex-col gap-4 md:flex-row'>
             <div className='flex items-center flex-grow'>
@@ -197,12 +240,12 @@ export default function Discover() {
               />
               <Button
                 onClick={handleSearch}
-                className='rounded-l-none bg-secondary hover:bg-primary'
+                className='rounded-l-none bg-primary hover:bg-primary/90'
               >
-                Search
+                <Search className='w-4 h-4' />
               </Button>
             </div>
-            <div className='flex gap-4'>
+            <div className='flex flex-col gap-4 sm:flex-row'>
               <FilterPopover
                 discover_type={discover_type}
                 initialFilters={filters}
@@ -216,41 +259,49 @@ export default function Discover() {
                 }}
                 defaultValue={sortBy}
               >
-                <SelectTrigger className='w-[220px] bg-secondary text-white'>
+                <SelectTrigger className='w-full text-white sm:w-auto bg-primary'>
                   <ArrowUpDown className='w-4 h-4 mr-2' />
                   <SelectValue placeholder='Sort by' />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value='relevance'>Relevance</SelectItem>
                   <SelectItem value='newest'>Newest</SelectItem>
-                  <SelectItem value='nearest'>Nearest</SelectItem>
-                  <SelectItem value='borrowing_duration'>
-                    Borrowing Duration
-                  </SelectItem>
+                  {discover_type === 'borrowing' && (
+                    <SelectItem value='nearest'>Nearest</SelectItem>
+                  )}
+                  {discover_type === 'borrowing' && (
+                    <SelectItem value='borrowing_duration'>
+                      Borrowing Duration
+                    </SelectItem>
+                  )}
                 </SelectContent>
               </Select>
             </div>
           </div>
+        </div>
 
-          {/* Grid Item */}
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 my-8 min-h-[300px]'>
-            {isLoading ? (
-              <p className='col-span-full'>Loading...</p>
-            ) : items.length > 0 ? (
-              items.map((item) => (
-                <ItemCard
-                  key={item.id}
-                  item={item}
-                  discover_type={discover_type}
-                />
-              ))
-            ) : (
-              <p className='col-span-full'>No items found.</p>
-            )}
-          </div>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 my-8 min-h-[300px]'>
+          {isLoading ? (
+            <div className='flex items-center justify-center col-span-full'>
+              <Loader2 className='w-8 h-8 animate-spin text-primary' />
+            </div>
+          ) : items.length > 0 ? (
+            items.map((item) => (
+              <ItemCard
+                key={item.id}
+                item={item}
+                discover_type={discover_type}
+              />
+            ))
+          ) : (
+            <div className='py-10 text-center text-gray-500 col-span-full'>
+              No items found for the current criteria.
+            </div>
+          )}
+        </div>
 
-          {/* Pagination */}
-          {!isLoading && meta.totalPages > 1 && (
+        {!isLoading && meta.totalPages > 1 && (
+          <div className='mt-10'>
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
@@ -260,22 +311,10 @@ export default function Discover() {
                       e.preventDefault();
                       setPage((p) => Math.max(1, p - 1));
                     }}
+                    disabled={page === 1}
                   />
                 </PaginationItem>
-                {[...Array(meta.totalPages)].map((_, i) => (
-                  <PaginationItem key={i}>
-                    <PaginationLink
-                      href='#'
-                      isActive={page === i + 1}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setPage(i + 1);
-                      }}
-                    >
-                      {i + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
+                {renderPaginationItems()}
                 <PaginationItem>
                   <PaginationNext
                     href='#'
@@ -283,12 +322,13 @@ export default function Discover() {
                       e.preventDefault();
                       setPage((p) => Math.min(meta.totalPages, p + 1));
                     }}
+                    disabled={page === meta.totalPages}
                   />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
-          )}
-        </div>
+          </div>
+        )}
       </Wrapper>
     </div>
   );

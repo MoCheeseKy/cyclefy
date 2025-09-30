@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// Import komponen dari Shadcn/UI
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -12,8 +11,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button'; // <-- Import Button
-import { UploadCloud, X } from 'lucide-react'; // <-- Import X icon
+import { Button } from '@/components/ui/button';
+import { UploadCloud, X } from 'lucide-react';
 
 export default function NewItemForm({ formData, setFormData, errors }) {
   const [categories, setCategories] = useState([]);
@@ -22,7 +21,7 @@ export default function NewItemForm({ formData, setFormData, errors }) {
 
   useEffect(() => {
     const token = localStorage.getItem('cyclefy_user_token');
-    const headers = { 'Authorization': `Bearer ${token}` };
+    const headers = { Authorization: `Bearer ${token}` };
 
     const fetchDataForDropdowns = async () => {
       try {
@@ -56,14 +55,12 @@ export default function NewItemForm({ formData, setFormData, errors }) {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    // Validasi bisa ditambahkan di sini (misal: jumlah & ukuran file)
     setFormData((prev) => ({
       ...prev,
       images: [...prev.images, ...files].slice(0, 5),
     }));
   };
 
-  // <-- FUNGSI BARU UNTUK MENGHAPUS GAMBAR -->
   const removeImage = (indexToRemove) => {
     setFormData((prev) => ({
       ...prev,
@@ -191,7 +188,6 @@ export default function NewItemForm({ formData, setFormData, errors }) {
         )}
       </div>
 
-      {/* <-- BAGIAN BARU UNTUK MENAMPILKAN LIST GAMBAR --> */}
       {formData.images.length > 0 && (
         <div className='space-y-2'>
           {formData.images.map((file, index) => (
@@ -215,7 +211,6 @@ export default function NewItemForm({ formData, setFormData, errors }) {
           ))}
         </div>
       )}
-      {/* <-- AKHIR BAGIAN BARU --> */}
     </div>
   );
 }

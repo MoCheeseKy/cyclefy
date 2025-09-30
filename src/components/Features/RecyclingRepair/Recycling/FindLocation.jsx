@@ -153,110 +153,109 @@ export default function FindRecyclingLocation({
   };
 
   return (
-    <div className='flex justify-center py-20'>
-      <Wrapper>
-        <div className='flex my-[10px] items-center gap-[10px]'>
-          <div className='w-[60px] h-[60px] bg-gray-200 rounded-full' />
-          <p className='text-[30px] font-bold'>Find a Recycling Location</p>
-        </div>
-        <p className='text-lg'>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    <Wrapper>
+      <div className='flex my-[10px] items-center gap-[10px]'>
+        <div className='w-[60px] h-[60px] bg-recycle-repair-logo bg-cover bg-no-repeat rounded-full' />
+        <p className='text-2xl font-bold md:text-3xl'>
+          Find a Recycling Location
         </p>
-        <div className='mt-8'>
-          <div className='flex flex-col gap-4 md:flex-row'>
-            <div className='flex items-center flex-grow'>
-              <Input
-                type='text'
-                placeholder='Search by location name...'
-                className='rounded-r-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              />
-              <Button
-                onClick={handleSearch}
-                className='bg-green-800 rounded-l-none hover:bg-green-700'
-              >
-                Search
-              </Button>
-            </div>
-            <div className='flex gap-4'>
-              <FilterPopover
-                initialFilters={filters}
-                categories={categories}
-                onApplyFilters={applyFilters}
-              />
-              <Select
-                onValueChange={(value) => {
-                  setSortBy(value);
-                  setCurrentPage(1);
-                }}
-                defaultValue={sortBy}
-              >
-                <SelectTrigger className='w-[220px] bg-green-800 text-white'>
-                  <ArrowUpDown className='w-4 h-4 mr-2' />
-                  <SelectValue placeholder='Sort by' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='relevance'>Relevance</SelectItem>
-                  <SelectItem value='nearest'>Nearest</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+      </div>
+      <p className='text-base md:text-lg'>
+        Choose a recycling location from the list below. You can use filters to
+        find the one that best suits your needs.
+      </p>
+      <div className='mt-8'>
+        <div className='flex flex-col gap-4 md:flex-row'>
+          <div className='flex items-center flex-grow'>
+            <Input
+              type='text'
+              placeholder='Search by location name...'
+              className='rounded-r-none focus-visible:ring-0 focus-visible:ring-offset-0'
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            />
+            <Button
+              onClick={handleSearch}
+              className='rounded-l-none bg-primary hover:bg-primary/90'
+            >
+              <Search className='w-4 h-4' />
+            </Button>
+          </div>
+          <div className='flex flex-col gap-4 sm:flex-row'>
+            <FilterPopover
+              initialFilters={filters}
+              categories={categories}
+              onApplyFilters={applyFilters}
+            />
+            <Select
+              onValueChange={(value) => {
+                setSortBy(value);
+                setCurrentPage(1);
+              }}
+              defaultValue={sortBy}
+            >
+              <SelectTrigger className='w-full sm:w-[220px] bg-white'>
+                <ArrowUpDown className='w-4 h-4 mr-2' />
+                <SelectValue placeholder='Sort by' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='relevance'>Relevance</SelectItem>
+                <SelectItem value='nearest'>Nearest</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
-        <div className='grid grid-cols-1 sm:grid-cols-2 gap-[30px] min-h-[400px] my-8'>
-          {isLoading ? (
-            <p className='py-10 text-center col-span-full'>
-              Loading locations...
-            </p>
-          ) : locations.length > 0 ? (
-            locations.map((loc) => (
-              <LocationCard
-                key={loc.id}
-                location={loc}
-                setSelectedLocationId={setSelectedLocationId}
-                setPage={setPage}
-              />
-            ))
-          ) : (
-            <p className='py-10 text-center text-gray-500 col-span-full'>
-              No recycling locations found. Try adjusting your search or
-              filters.
-            </p>
-          )}
-        </div>
-        {!isLoading && meta.totalPages > 1 && (
-          <div className='mt-10'>
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href='#'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentPage((p) => Math.max(1, p - 1));
-                    }}
-                    disabled={currentPage === 1}
-                  />
-                </PaginationItem>
-                {renderPaginationItems()}
-                <PaginationItem>
-                  <PaginationNext
-                    href='#'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentPage((p) => Math.min(meta.totalPages, p + 1));
-                    }}
-                    disabled={currentPage === meta.totalPages}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
+      </div>
+      <div className='grid grid-cols-1 sm:grid-cols-2 gap-6 min-h-[400px] my-8'>
+        {isLoading ? (
+          <p className='py-10 text-center col-span-full'>
+            Loading locations...
+          </p>
+        ) : locations.length > 0 ? (
+          locations.map((loc) => (
+            <LocationCard
+              key={loc.id}
+              location={loc}
+              setSelectedLocationId={setSelectedLocationId}
+              setPage={setPage}
+            />
+          ))
+        ) : (
+          <p className='py-10 text-center text-gray-500 col-span-full'>
+            No recycling locations found. Try adjusting your search or filters.
+          </p>
         )}
-      </Wrapper>
-    </div>
+      </div>
+      {!isLoading && meta.totalPages > 1 && (
+        <div className='mt-10'>
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href='#'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentPage((p) => Math.max(1, p - 1));
+                  }}
+                  disabled={currentPage === 1}
+                />
+              </PaginationItem>
+              {renderPaginationItems()}
+              <PaginationItem>
+                <PaginationNext
+                  href='#'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentPage((p) => Math.min(meta.totalPages, p + 1));
+                  }}
+                  disabled={currentPage === meta.totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
+    </Wrapper>
   );
 }

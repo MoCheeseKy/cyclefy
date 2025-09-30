@@ -36,27 +36,29 @@ const BorrowingFilters = ({ localFilters, setLocalFilters, categories }) => {
   };
 
   return (
-    <div className='grid grid-cols-3 gap-6'>
+    <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
       {/* Kolom 1: Category */}
       <div className='space-y-2'>
         <h4 className='font-bold'>Category</h4>
-        {categories.map((cat) => (
-          <div key={cat.id} className='flex items-center space-x-2'>
-            <Checkbox
-              id={`cat-borrow-${cat.id}`}
-              checked={localFilters.categories?.includes(cat.name)}
-              onCheckedChange={(checked) =>
-                handleCategoryChange(checked, cat.name)
-              }
-            />
-            <Label
-              htmlFor={`cat-borrow-${cat.id}`}
-              className='text-sm font-normal'
-            >
-              {cat.name}
-            </Label>
-          </div>
-        ))}
+        <div className='grid grid-cols-2 gap-2 sm:grid-cols-1'>
+          {categories.map((cat) => (
+            <div key={cat.id} className='flex items-center space-x-2'>
+              <Checkbox
+                id={`cat-borrow-${cat.id}`}
+                checked={localFilters.categories?.includes(cat.name)}
+                onCheckedChange={(checked) =>
+                  handleCategoryChange(checked, cat.name)
+                }
+              />
+              <Label
+                htmlFor={`cat-borrow-${cat.id}`}
+                className='text-sm font-normal'
+              >
+                {cat.name}
+              </Label>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Kolom 2: Borrowing Duration */}
@@ -168,26 +170,28 @@ const BarterFilters = ({ localFilters, setLocalFilters, categories }) => {
   };
 
   return (
-    <div className='grid grid-cols-1 w-[200px]'>
+    <div className='w-full sm:w-[200px]'>
       <div className='space-y-2'>
         <h4 className='font-bold'>Category</h4>
-        {categories.map((cat) => (
-          <div key={cat.id} className='flex items-center space-x-2'>
-            <Checkbox
-              id={`cat-barter-${cat.id}`}
-              checked={localFilters.categories?.includes(cat.name)}
-              onCheckedChange={(checked) =>
-                handleCategoryChange(checked, cat.name)
-              }
-            />
-            <Label
-              htmlFor={`cat-barter-${cat.id}`}
-              className='text-sm font-normal'
-            >
-              {cat.name}
-            </Label>
-          </div>
-        ))}
+        <div className='grid grid-cols-2 gap-2 sm:grid-cols-1'>
+          {categories.map((cat) => (
+            <div key={cat.id} className='flex items-center space-x-2'>
+              <Checkbox
+                id={`cat-barter-${cat.id}`}
+                checked={localFilters.categories?.includes(cat.name)}
+                onCheckedChange={(checked) =>
+                  handleCategoryChange(checked, cat.name)
+                }
+              />
+              <Label
+                htmlFor={`cat-barter-${cat.id}`}
+                className='text-sm font-normal'
+              >
+                {cat.name}
+              </Label>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -227,13 +231,16 @@ export default function FilterPopover({
       <PopoverTrigger asChild>
         <Button
           variant='outline'
-          className='text-white bg-green-800 hover:bg-green-700 hover:text-white'
+          className='w-full text-white sm:w-auto bg-primary hover:bg-primary/90 hover:text-white'
         >
           Filters
           <FilterIcon className='w-4 h-4 ml-2' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-auto p-6' align='end'>
+      <PopoverContent
+        className='w-screen max-w-xs p-6 sm:w-auto sm:max-w-none'
+        align='end'
+      >
         {discover_type === 'borrowing' ? (
           <BorrowingFilters
             localFilters={localFilters}
@@ -248,12 +255,12 @@ export default function FilterPopover({
           />
         )}
 
-        <div className='flex justify-end gap-4 mt-6'>
+        <div className='flex flex-col-reverse justify-end gap-4 mt-6 sm:flex-row'>
           <Button variant='ghost' onClick={handleReset}>
             Reset Filters
           </Button>
           <Button
-            className='bg-green-800 hover:bg-green-700'
+            className='bg-primary hover:bg-primary/90'
             onClick={handleApply}
           >
             Apply Filters

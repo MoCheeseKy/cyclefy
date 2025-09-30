@@ -6,6 +6,9 @@ import axios from 'axios';
 import Wrapper from '@/components/_shared/Wrapper';
 import NewItemForm from './NewItemForm';
 import ExistingItemsForm from './ExistingItemForm';
+import ConfirmNewItemModal from './ConfirmNewItemModal';
+import ConfirmExistingItemModal from './ConfirmExistingItemModal';
+import SuccessModal from './SuccessModal';
 
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -19,7 +22,6 @@ export default function RequestBarterPage() {
   const { id } = router.query;
   const { toast } = useToast();
 
-  // State yang dikontrol oleh halaman ini
   const [barterOption, setBarterOption] = useState('new');
   const [userItems, setUserItems] = useState([]);
   const [selectedExistingItemId, setSelectedExistingItemId] = useState(null);
@@ -35,7 +37,11 @@ export default function RequestBarterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // Fetch data yang dibutuhkan untuk form 'existing items'
+  // State untuk modal
+  const [isConfirmNewOpen, setIsConfirmNewOpen] = useState(false);
+  const [isConfirmExistingOpen, setIsConfirmExistingOpen] = useState(false);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+
   useEffect(() => {
     if (!router.isReady) return;
     const token = localStorage.getItem('cyclefy_user_token');
@@ -45,20 +51,10 @@ export default function RequestBarterPage() {
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_HOST}/users/current/barters`,
-          {
-            headers: { 'Authorization': `Bearer ${token}` },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
-
-        // --- PERBAIKAN DI SINI ---
-        // Akses path yang benar: response.data.data.my_items
         const resultData = response.data.data.my_items;
-        if (Array.isArray(resultData)) {
-          setUserItems(resultData);
-        } else {
-          setUserItems([]);
-        }
-        // --- AKHIR PERBAIKAN ---
+        setUserItems(Array.isArray(resultData) ? resultData : []);
       } catch (error) {
         console.error('Failed to fetch user items:', error);
         setUserItems([]);
@@ -85,21 +81,30 @@ export default function RequestBarterPage() {
         newErrors.selectedItem = 'You must select an item.';
     }
     if (!agree) newErrors.agree = 'You must agree to the terms.';
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validate()) {
+    if (validate()) {
+      if (barterOption === 'new') {
+        setIsConfirmNewOpen(true);
+      } else {
+        setIsConfirmExistingOpen(true);
+      }
+    } else {
       toast({
         variant: 'destructive',
         title: 'Please fix the errors in the form.',
       });
-      return;
     }
+  };
+
+  const executeSubmit = async () => {
     setIsLoading(true);
+    setIsConfirmNewOpen(false);
+    setIsConfirmExistingOpen(false);
 
     const formData = new FormData();
     if (barterOption === 'new') {
@@ -118,17 +123,10 @@ export default function RequestBarterPage() {
       await axios.post(
         `${process.env.NEXT_PUBLIC_HOST}/barters/${id}/request`,
         formData,
-        {
-          headers: { 'Authorization': `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      toast({
-        title: 'Success!',
-        description: 'Your barter request has been sent.',
-      });
-      router.push(`/features/barter/detail/${id}`);
+      setIsSuccessOpen(true);
     } catch (error) {
-      console.error('Submission failed:', error);
       toast({
         variant: 'destructive',
         title: 'Submission failed',
@@ -150,165 +148,207 @@ export default function RequestBarterPage() {
   const Step = ({ number, title, children }) => (
     <div>
       <div className='flex items-center gap-4 mb-2'>
-        <div className='flex items-center justify-center flex-shrink-0 w-12 h-12 text-3xl font-bold text-white bg-green-700 rounded-full'>
+        <div className='flex items-center justify-center flex-shrink-0 w-12 h-12 text-2xl font-bold text-white rounded-full md:text-3xl bg-primary'>
           {number}
         </div>
-        <div className='text-xl font-bold'>{title}</div>
+        <div className='text-lg font-bold md:text-xl'>{title}</div>
       </div>
-      <div className='pl-[64px] text-base text-gray-600'>{children}</div>
+      <div className='pl-16 text-base text-gray-600'>{children}</div>
     </div>
   );
 
+  const selectedItemName =
+    userItems.find((item) => item.id === selectedExistingItemId)?.item_name ||
+    '';
+
   return (
-    <div className='flex justify-center py-20'>
-      <Wrapper>
-        {/* Breadcrumbs & Header */}
-        <div className='flex flex-wrap items-center gap-2 text-base font-medium'>
-          <Link href='/' className='text-text-primary'>
-            Cyclefy
-          </Link>
-          <ChevronRight className='text-text-primary' />
-          <Link href='/features/barter' className='text-text-primary'>
-            Barter
-          </Link>
-          <ChevronRight className='text-text-primary' />
-          <Link href='/features/discover/barter' className='text-text-primary'>
-            Search for Items to Barter
-          </Link>
-          <ChevronRight className='text-text-primary' />
-          <span className='font-bold text-tertiary'>Request to Barter</span>
-        </div>
-        <div className='flex items-center gap-4 my-4'>
-          <div className='w-16 h-16 bg-gray-200 rounded-full' />
-          <h1 className='text-3xl font-bold'>Request to Barter</h1>
-        </div>
-        <p className='max-w-4xl text-lg text-gray-600'>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
-
-        <form
-          onSubmit={handleSubmit}
-          className='grid grid-cols-1 gap-16 mt-8 lg:grid-cols-2'
-        >
-          {/* Kolom Kiri: Instruksi */}
-          <div className='flex flex-col gap-6'>
-            <h2 className='text-3xl font-bold'>How To Request a Barter?</h2>
-            <Step number='1' title='Prepare Your Item'>
-              Clean it, make sure it’s still functional, and ready to be
-              swapped.
-            </Step>
-            <Step number='2' title='Offer Your Item'>
-              In the Request to Barter form, choose how to offer your item:
-              <ul className='mt-2 ml-4 space-y-1 list-disc'>
-                <li>
-                  Fill out a new form: Manually enter item detailsEnter your
-                  item name (e.g., <b>Electric Kettle</b>), a clear description
-                  (e.g.,
-                  <b>
-                    Teko pemanas air elektrik, kapasitas 1.7L, baru dipakai
-                    beberapa kali
-                  </b>
-                  .), choose a category, location, and contact info. Don’t
-                  forget to upload photos.
-                </li>
-                <li>
-                  <b>Use existing item:</b> Select from items you{"'"}ve
-                  previously posted.
-                </li>
-              </ul>
-            </Step>
-            <Step number='3' title='Submit & Confirm'>
-              Tap Send Request. The item owner will be notified. If they{"'"}re
-              interested in your offer, you{"'"}ll be contacted to arrange the
-              exchange.
-            </Step>
-          </div>
-
-          {/* Kolom Kanan: Form */}
-          <div className='w-full space-y-6'>
-            <div>
-              <Label className='text-base font-semibold'>
-                Select Barter Option
-              </Label>
-              <RadioGroup
-                value={barterOption}
-                onValueChange={setBarterOption}
-                className='grid grid-cols-2 gap-4 mt-2'
-              >
-                <Label
-                  htmlFor='new'
-                  className={`flex flex-col items-center justify-center p-4 border rounded-lg cursor-pointer ${
-                    barterOption === 'new'
-                      ? 'border-green-600 ring-2 ring-green-300'
-                      : 'hover:bg-gray-50'
-                  }`}
-                >
-                  <RadioGroupItem value='new' id='new' className='sr-only' />
-                  <FileImage className='w-6 h-6 mb-2' />
-                  <span className='text-sm text-center'>
-                    Fill out form for new item
-                  </span>
-                </Label>
-                <Label
-                  htmlFor='existing'
-                  className={`flex flex-col items-center justify-center p-4 border rounded-lg cursor-pointer ${
-                    barterOption === 'existing'
-                      ? 'border-green-600 ring-2 ring-green-300'
-                      : 'hover:bg-gray-50'
-                  }`}
-                >
-                  <RadioGroupItem
-                    value='existing'
-                    id='existing'
-                    className='sr-only'
-                  />
-                  <LibraryBig className='w-6 h-6 mb-2' />
-                  <span className='text-sm text-center'>
-                    Use existing items
-                  </span>
-                </Label>
-              </RadioGroup>
-            </div>
-
-            {barterOption === 'new' ? (
-              <NewItemForm
-                formData={newItemData}
-                setFormData={setNewItemData}
-                errors={errors}
-              />
-            ) : (
-              <ExistingItemsForm
-                items={userItems}
-                selectedItemId={selectedExistingItemId}
-                onSelectionChange={setSelectedExistingItemId}
-              />
-            )}
-
-            <div className='flex items-center space-x-2'>
-              <Checkbox id='terms' checked={agree} onCheckedChange={setAgree} />
-              <Label htmlFor='terms' className='text-sm font-normal'>
-                I agree to the terms of service and privacy policy.
-              </Label>
-            </div>
-            {errors.agree && (
-              <p className='-mt-2 text-sm text-red-500'>{errors.agree}</p>
-            )}
-
-            <Button
-              type='submit'
-              className='w-full bg-green-800 hover:bg-green-900'
-              disabled={isLoading}
+    <>
+      <div className='flex justify-center py-10 md:py-20'>
+        <Wrapper>
+          <div className='flex flex-wrap items-center gap-2 text-sm font-medium md:text-base'>
+            <Link href='/' className='text-text-primary'>
+              Cyclefy
+            </Link>
+            <ChevronRight className='w-4 h-4 text-text-primary' />
+            <Link href='/features/barter' className='text-text-primary'>
+              Barter
+            </Link>
+            <ChevronRight className='w-4 h-4 text-text-primary' />
+            <Link
+              href='/features/discover/barter'
+              className='text-text-primary'
             >
-              {isLoading ? (
-                <Loader2 className='w-4 h-4 mr-2 animate-spin' />
-              ) : (
-                'Send Request'
-              )}
-            </Button>
+              Search for Items
+            </Link>
+            <ChevronRight className='w-4 h-4 text-text-primary' />
+            <span className='font-bold text-tertiary'>Request to Barter</span>
           </div>
-        </form>
-      </Wrapper>
-    </div>
+          <div className='flex items-center gap-4 my-6'>
+            <div className='w-12 h-12 bg-center bg-cover rounded-full md:w-16 md:h-16 bg-barter-logo' />
+            <h1 className='text-2xl font-bold md:text-3xl'>
+              Request to Barter
+            </h1>
+          </div>
+          <p className='max-w-4xl text-base text-gray-600 md:text-lg'>
+            Offer one of your items in exchange for the item you want. You can
+            post a new item or choose from items you{"'"}ve listed before.
+          </p>
+          <form
+            onSubmit={handleSubmit}
+            className='grid grid-cols-1 gap-12 mt-8 lg:grid-cols-2 lg:gap-16'
+          >
+            <div className='flex flex-col order-2 gap-6 lg:order-1'>
+              <h2 className='text-2xl font-bold md:text-3xl'>
+                How To Request a Barter?
+              </h2>
+              <Step number='1' title='Prepare Your Item'>
+                Clean it, make sure it’s still functional, and ready to be
+                swapped.
+              </Step>
+              <Step number='2' title='Offer Your Item'>
+                In the Request to Barter form, choose how to offer your item:
+                <ul className='mt-2 ml-4 space-y-1 list-disc'>
+                  <li>
+                    Fill out a new form: Manually enter item detailsEnter your
+                    item name (e.g., <b>Electric Kettle</b>), a clear
+                    description (e.g.,
+                    <b>
+                      Teko pemanas air elektrik, kapasitas 1.7L, baru dipakai
+                      beberapa kali
+                    </b>
+                    .), choose a category, location, and contact info. Don’t
+                    forget to upload photos.
+                  </li>
+                  <li>
+                    <b>Use existing item:</b> Select from items you{"'"}ve
+                    previously posted.
+                  </li>
+                </ul>
+              </Step>
+              <Step number='3' title='Submit & Confirm'>
+                Tap Send Request. The item owner will be notified. If they’re
+                interested in your offer, you’ll be contacted to arrange the
+                exchange. Track all your barter activity in the Barter History.
+              </Step>
+            </div>
+            <div className='order-1 w-full space-y-6 lg:order-2'>
+              <div>
+                <Label className='text-base font-semibold'>
+                  Select Barter Option
+                </Label>
+                <RadioGroup
+                  value={barterOption}
+                  onValueChange={setBarterOption}
+                  className='grid grid-cols-2 gap-4 mt-2'
+                >
+                  <Label
+                    htmlFor='new'
+                    className={`flex flex-col items-center justify-center p-4 border rounded-lg cursor-pointer transition-all ${
+                      barterOption === 'new'
+                        ? 'border-primary ring-2 ring-primary/30'
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <RadioGroupItem value='new' id='new' className='sr-only' />
+                    <FileImage className='w-6 h-6 mb-2' />
+                    <span className='text-sm text-center'>
+                      Fill out form for new item
+                    </span>
+                  </Label>
+                  <Label
+                    htmlFor='existing'
+                    className={`flex flex-col items-center justify-center p-4 border rounded-lg cursor-pointer transition-all ${
+                      barterOption === 'existing'
+                        ? 'border-primary ring-2 ring-primary/30'
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <RadioGroupItem
+                      value='existing'
+                      id='existing'
+                      className='sr-only'
+                    />
+                    <LibraryBig className='w-6 h-6 mb-2' />
+                    <span className='text-sm text-center'>
+                      Use existing items
+                    </span>
+                  </Label>
+                </RadioGroup>
+              </div>
+
+              {barterOption === 'new' ? (
+                <NewItemForm
+                  formData={newItemData}
+                  setFormData={setNewItemData}
+                  errors={errors}
+                />
+              ) : (
+                <ExistingItemsForm
+                  items={userItems}
+                  selectedItemId={selectedExistingItemId}
+                  onSelectionChange={setSelectedExistingItemId}
+                  error={errors.selectedItem}
+                />
+              )}
+
+              <div className='flex items-start space-x-3'>
+                <Checkbox
+                  id='terms'
+                  checked={agree}
+                  onCheckedChange={setAgree}
+                  className='mt-1'
+                />
+                <Label
+                  htmlFor='terms'
+                  className='text-sm font-normal leading-relaxed'
+                >
+                  I agree to the{' '}
+                  <a href='/terms' className='underline'>
+                    terms of service
+                  </a>{' '}
+                  and{' '}
+                  <a href='/privacy' className='underline'>
+                    privacy policy
+                  </a>
+                  .
+                </Label>
+              </div>
+              {errors.agree && (
+                <p className='-mt-2 text-sm text-red-500'>{errors.agree}</p>
+              )}
+
+              <Button
+                type='submit'
+                className='w-full bg-primary hover:bg-primary/90'
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+                ) : (
+                  'Send Request'
+                )}
+              </Button>
+            </div>
+          </form>
+        </Wrapper>
+      </div>
+      <ConfirmNewItemModal
+        isOpen={isConfirmNewOpen}
+        onClose={() => setIsConfirmNewOpen(false)}
+        onConfirm={executeSubmit}
+        isLoading={isLoading}
+      />
+      <ConfirmExistingItemModal
+        isOpen={isConfirmExistingOpen}
+        onClose={() => setIsConfirmExistingOpen(false)}
+        onConfirm={executeSubmit}
+        isLoading={isLoading}
+        itemName={selectedItemName}
+      />
+      <SuccessModal
+        isOpen={isSuccessOpen}
+        onClose={() => setIsSuccessOpen(false)}
+      />
+    </>
   );
 }
