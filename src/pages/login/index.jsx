@@ -146,9 +146,24 @@ export default function SignIn() {
             </div>
 
             <div className='flex justify-center gap-4 text-xl text-text-primary'>
-              <FaFacebookF className='text-[#1877F2]' />
-              <FcGoogle />
-              <FaXTwitter className='text-black' />
+              <FaFacebookF
+                className='text-[#1877F2] cursor-pointer'
+                onClick={() =>
+                  (window.location.href = `${process.env.NEXT_PUBLIC_HOST}/auth/facebook`)
+                }
+              />
+              <FcGoogle
+                className='cursor-pointer'
+                onClick={() =>
+                  (window.location.href = `${process.env.NEXT_PUBLIC_HOST}/auth/google`)
+                }
+              />
+              <FaXTwitter
+                className='text-black cursor-pointer'
+                onClick={() =>
+                  (window.location.href = `${process.env.NEXT_PUBLIC_HOST}/auth/twitter`)
+                }
+              />
             </div>
           </form>
         </div>
