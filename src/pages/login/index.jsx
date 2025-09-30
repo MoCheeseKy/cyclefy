@@ -5,7 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
-import { Facebook, Chrome, Twitter } from 'lucide-react';
+import { FaFacebookF } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
+import { FcGoogle } from 'react-icons/fc';
 
 export default function SignIn() {
   const { toast } = useToast();
@@ -144,9 +146,9 @@ export default function SignIn() {
             </div>
 
             <div className='flex justify-center gap-4 text-xl text-text-primary'>
-              <Facebook className='cursor-pointer hover:text-action' />
-              <Chrome className='cursor-pointer hover:text-action' />
-              <Twitter className='cursor-pointer hover:text-action' />
+              <FaFacebookF className='text-[#1877F2]' />
+              <FcGoogle />
+              <FaXTwitter className='text-black' />
             </div>
           </form>
         </div>

@@ -3,7 +3,9 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
-import { Facebook, Chrome, Twitter } from 'lucide-react'; // Menggunakan ikon dari lucide-react
+import { FaFacebookF } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
+import { FcGoogle } from 'react-icons/fc';
 
 export default function SignUp() {
   const { toast } = useToast();
@@ -136,9 +138,9 @@ export default function SignUp() {
               <hr className='flex-1 border-t' />
             </div>
             <div className='flex justify-center gap-4 text-xl text-text-primary'>
-              <Facebook className='cursor-pointer hover:text-action' />
-              <Chrome className='cursor-pointer hover:text-action' />
-              <Twitter className='cursor-pointer hover:text-action' />
+              <FaFacebookF className='text-[#1877F2]' />
+              <FcGoogle />
+              <FaXTwitter className='text-black' />
             </div>
           </form>
         </div>

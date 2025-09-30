@@ -4,14 +4,10 @@ import Wrapper from '@/components/_shared/Wrapper';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 // 1. Impor ikon MapPin, Phone, Mail, DAN ikon sosial media
-import {
-  MapPin,
-  Phone,
-  Mail,
-  Instagram,
-  Facebook,
-  Twitter,
-} from 'lucide-react';
+import { MapPin, Phone, Mail } from 'lucide-react';
+import { FaFacebookF } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
+import { FcGoogle } from 'react-icons/fc';
 
 function ContactUs() {
   return (
@@ -173,21 +169,21 @@ export default function Footer() {
                     aria-label='Instagram'
                     className='flex items-center justify-center w-8 h-8 transition-colors bg-white rounded-full text-primary hover:bg-gray-200'
                   >
-                    <Instagram className='w-5 h-5' />
+                    <FcGoogle className='w-5 h-5' />
                   </a>
                   <a
                     href='#' // Ganti dengan link Facebook Anda
                     aria-label='Facebook'
                     className='flex items-center justify-center w-8 h-8 transition-colors bg-white rounded-full text-primary hover:bg-gray-200'
                   >
-                    <Facebook className='w-5 h-5' />
+                    <FaFacebookF className='w-5 h-5 text-[#1877F2]' />
                   </a>
                   <a
                     href='#' // Ganti dengan link X/Twitter Anda
                     aria-label='Twitter/X'
                     className='flex items-center justify-center w-8 h-8 transition-colors bg-white rounded-full text-primary hover:bg-gray-200'
                   >
-                    <Twitter className='w-5 h-5' />
+                    <FaXTwitter className='w-5 h-5' />
                   </a>
                 </div>
               </div>
