@@ -25,7 +25,7 @@ export default function TermsPage() {
             <div className='font-semibold text-primary'>Terms of Service</div>
           </div>
 
-          <div className='max-w-4xl mx-auto mt-8'>
+          <div className='mt-8'>
             <div className='flex flex-col items-center text-center md:flex-row md:text-left md:gap-4'>
               <FileText className='w-8 h-8 text-primary md:w-10 md:h-10' />
               <div>
