@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
@@ -35,7 +36,7 @@ function NewsCard({ news }) {
         <Card className='h-full overflow-hidden transition-shadow duration-300 shadow-md cursor-pointer group hover:shadow-xl'>
           <CardContent className='p-0'>
             <div className='relative w-full aspect-square'>
-              <img
+              <Image
                 src={imageUrl}
                 alt={news.title}
                 className='object-cover w-full h-full transition-transform duration-300 group-hover:scale-105'

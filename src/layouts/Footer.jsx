@@ -130,7 +130,7 @@ export default function Footer() {
                 <ul className='space-y-3'>
                   <li>
                     <Link
-                      href='/contact-us'
+                      href='#contact-us'
                       className='text-background/70 hover:text-background'
                     >
                       Contact Us
@@ -146,7 +146,7 @@ export default function Footer() {
                   </li>
                   <li>
                     <Link
-                      href='/legal/terms'
+                      href='/terms'
                       className='text-background/70 hover:text-background'
                     >
                       Terms of Service
@@ -154,7 +154,7 @@ export default function Footer() {
                   </li>
                   <li>
                     <Link
-                      href='/legal/privacy'
+                      href='/privacy-police'
                       className='text-background/70 hover:text-background'
                     >
                       Privacy Policy

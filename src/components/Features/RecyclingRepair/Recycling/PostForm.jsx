@@ -296,20 +296,17 @@ export default function PostRecyclingItemForm({ setFormData, setPage }) {
             onCheckedChange={setAgree}
             className='mt-1'
           />
-          <Label
-            htmlFor='terms'
-            className='text-sm font-normal leading-relaxed'
-          >
+          <div htmlFor='terms' className='text-sm font-normal leading-relaxed'>
             I agree to the{' '}
             <a href='/terms' className='underline'>
               terms of service
             </a>{' '}
             and{' '}
-            <a href='/privacy' className='underline'>
+            <a href='/privacy-police' className='underline'>
               privacy policy
             </a>{' '}
             of Cyclefy.
-          </Label>
+          </div>
         </div>
         {errors.agree && (
           <p className='-mt-2 text-sm text-red-500'>{errors.agree}</p>

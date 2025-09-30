@@ -443,7 +443,7 @@ export default function PostForm() {
           )}
           <div className='flex items-center space-x-2'>
             <Checkbox id='terms' checked={agree} onCheckedChange={setAgree} />
-            <Label
+            <div
               htmlFor='terms'
               className='text-sm font-normal leading-relaxed'
             >
@@ -452,11 +452,11 @@ export default function PostForm() {
                 terms of service
               </a>{' '}
               and{' '}
-              <a href='/privacy' className='underline'>
+              <a href='/privacy-police' className='underline'>
                 privacy policy
               </a>{' '}
               of Cyclefy.
-            </Label>
+            </div>
           </div>
           {errors.agree && (
             <p className='-mt-2 text-sm text-red-500'>{errors.agree}</p>

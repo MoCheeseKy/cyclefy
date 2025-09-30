@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { MapPin } from 'lucide-react';
 
 export default function LocationCard({
@@ -21,7 +22,7 @@ export default function LocationCard({
       className='flex flex-col h-full overflow-hidden transition-shadow bg-white border border-gray-200 rounded-lg shadow-md cursor-pointer md:flex-row md:h-48 hover:shadow-lg'
     >
       <div className='relative flex-shrink-0 w-full h-40 md:w-2/5 md:h-full'>
-        <img
+        <Image
           src={imageUrl}
           alt={location.location_name}
           className='object-cover w-full h-full'

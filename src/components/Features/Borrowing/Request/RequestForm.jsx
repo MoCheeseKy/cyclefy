@@ -269,17 +269,17 @@ export default function RequestBorrowForm() {
           </div>
           <div className='flex items-center pt-2 space-x-2'>
             <Checkbox id='terms' checked={agree} onCheckedChange={setAgree} />
-            <Label htmlFor='terms' className='text-sm font-normal'>
+            <div htmlFor='terms' className='text-sm font-normal'>
               I agree to the{' '}
               <a href='/terms' className='underline'>
                 terms of service
               </a>{' '}
               and{' '}
-              <a href='/privacy' className='underline'>
+              <a href='/privacy-police' className='underline'>
                 privacy policy
               </a>{' '}
               of Cyclefy.
-            </Label>
+            </div>
           </div>
           {errors.agree && (
             <p className='-mt-2 text-sm text-red-500'>{errors.agree}</p>

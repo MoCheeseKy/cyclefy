@@ -192,8 +192,8 @@ export default function PostRepairItem() {
         {number}
       </div>
       <div>
-        <h3 className='text-lg font-bold md:text-xl'>{title}</h3>
-        <p className='mt-1 text-gray-600'>{children}</p>
+        <div className='text-lg font-bold md:text-xl'>{title}</div>
+        <div className='mt-1 text-gray-600'>{children}</div>
       </div>
     </div>
   );
@@ -492,7 +492,7 @@ export default function PostRepairItem() {
                         onCheckedChange={setAgree}
                         className='mt-1'
                       />
-                      <Label
+                      <div
                         htmlFor='terms'
                         className='text-sm font-normal leading-relaxed'
                       >
@@ -501,11 +501,11 @@ export default function PostRepairItem() {
                           terms of service
                         </a>{' '}
                         and{' '}
-                        <a href='/privacy' className='underline'>
+                        <a href='/privacy-police' className='underline'>
                           privacy policy
                         </a>
                         .
-                      </Label>
+                      </div>
                     </div>
                     {errors.agree && (
                       <p className='-mt-2 text-sm text-red-500'>

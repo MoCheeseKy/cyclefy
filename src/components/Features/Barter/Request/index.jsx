@@ -298,7 +298,7 @@ export default function RequestBarterPage() {
                   onCheckedChange={setAgree}
                   className='mt-1'
                 />
-                <Label
+                <div
                   htmlFor='terms'
                   className='text-sm font-normal leading-relaxed'
                 >
@@ -307,11 +307,11 @@ export default function RequestBarterPage() {
                     terms of service
                   </a>{' '}
                   and{' '}
-                  <a href='/privacy' className='underline'>
+                  <a href='/privacy-police' className='underline'>
                     privacy policy
                   </a>
                   .
-                </Label>
+                </div>
               </div>
               {errors.agree && (
                 <p className='-mt-2 text-sm text-red-500'>{errors.agree}</p>
