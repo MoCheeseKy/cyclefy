@@ -303,13 +303,13 @@ export default function RequestBarterPage() {
                   className='text-sm font-normal leading-relaxed'
                 >
                   I agree to the{' '}
-                  <a href='/terms' className='underline'>
+                  <Link href='/terms' className='underline'>
                     terms of service
-                  </a>{' '}
+                  </Link>{' '}
                   and{' '}
-                  <a href='/privacy-police' className='underline'>
+                  <Link href='/privacy-police' className='underline'>
                     privacy policy
-                  </a>
+                  </Link>
                   .
                 </div>
               </div>

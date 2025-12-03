@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
@@ -271,13 +272,13 @@ export default function RequestBorrowForm() {
             <Checkbox id='terms' checked={agree} onCheckedChange={setAgree} />
             <div htmlFor='terms' className='text-sm font-normal'>
               I agree to the{' '}
-              <a href='/terms' className='underline'>
+              <Link href='/terms' className='underline'>
                 terms of service
-              </a>{' '}
+              </Link>{' '}
               and{' '}
-              <a href='/privacy-police' className='underline'>
+              <Link href='/privacy-police' className='underline'>
                 privacy policy
-              </a>{' '}
+              </Link>{' '}
               of Cyclefy.
             </div>
           </div>

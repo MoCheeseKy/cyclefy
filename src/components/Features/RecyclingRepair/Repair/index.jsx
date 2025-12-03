@@ -1,6 +1,6 @@
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import axios from 'axios';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -497,13 +497,13 @@ export default function PostRepairItem() {
                         className='text-sm font-normal leading-relaxed'
                       >
                         I agree to the{' '}
-                        <a href='/terms' className='underline'>
+                        <Link href='/terms' className='underline'>
                           terms of service
-                        </a>{' '}
+                        </Link>{' '}
                         and{' '}
-                        <a href='/privacy-police' className='underline'>
+                        <Link href='/privacy-police' className='underline'>
                           privacy policy
-                        </a>
+                        </Link>
                         .
                       </div>
                     </div>
