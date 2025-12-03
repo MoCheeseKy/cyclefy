@@ -56,7 +56,7 @@ function MobileMenu({ isLoggedIn, profile, handleLogout, onClose }) {
             />
           </Link>
         )}
-        <LanguageSwitcher />
+        {/* <LanguageSwitcher /> */}
       </div>
     </div>
   );
@@ -194,7 +194,7 @@ export default function Header() {
                 />
               </Link>
             )}
-            <LanguageSwitcher />
+            {/* <LanguageSwitcher /> */}
           </div>
 
           {/* Tombol Hamburger untuk Mobile/Tablet */}
