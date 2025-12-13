@@ -244,12 +244,12 @@ export default function PostRecyclingItemForm({ setFormData, setPage }) {
           <div className='flex justify-center px-6 pt-5 pb-6 mt-1 border-2 border-dashed rounded-md'>
             <div className='space-y-1 text-center'>
               <UploadCloud className='w-12 h-12 mx-auto text-gray-400' />
-              <div className='flex text-sm text-gray-600'>
+              <div className='flex justify-center text-sm text-gray-600'>
                 <label
                   htmlFor='file-upload'
                   className='relative font-medium text-indigo-600 bg-white rounded-md cursor-pointer hover:text-indigo-500 focus-within:outline-none'
                 >
-                  <span>Add File</span>
+                  <div className=''>Add File</div>
                   <input
                     id='file-upload'
                     name='file-upload'

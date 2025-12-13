@@ -72,8 +72,10 @@ export default function Donation() {
                 contributed and their current status
               </p>
             </div>
-            {/* Responsive change: Tombol diberi margin atas di mobile */}
-            <Link href='/user/histories/donation' className='w-full md:w-auto'>
+            <Link
+              href='/user/histories/donation?history_type=donation'
+              className='w-full md:w-auto'
+            >
               <button className='bg-white text-primary rounded-[16px] px-[20px] py-[10px] w-full md:w-auto md:min-w-[131px] font-semibold'>
                 View More
               </button>

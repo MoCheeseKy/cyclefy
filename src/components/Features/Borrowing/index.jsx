@@ -98,7 +98,10 @@ export default function Borrowing() {
                 borrowed in the past and their current status.
               </p>
             </div>
-            <Link href='/user/histories/borrow' className='w-full md:w-auto'>
+            <Link
+              href='/user/histories/borrow?history_type=borrow'
+              className='w-full md:w-auto'
+            >
               <button className='bg-white text-primary rounded-[16px] px-[20px] py-[10px] w-full md:w-auto md:min-w-[131px] font-semibold'>
                 View More
               </button>
