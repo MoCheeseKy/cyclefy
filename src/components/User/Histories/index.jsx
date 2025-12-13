@@ -22,6 +22,14 @@ export default function UserHistories() {
     const validTab = sideTabs.find((tab) => tab.value === historyType);
     if (validTab) {
       setActiveTab(validTab.value);
+    } else if (historyType === 'barter') {
+      setActiveTab('barter');
+    } else if (historyType === 'borrow') {
+      setActiveTab('borrow');
+    } else if (historyType === 'recycle') {
+      setActiveTab('recycle');
+    } else if (historyType === 'repair') {
+      setActiveTab('repair');
     } else {
       setActiveTab('donation');
     }
