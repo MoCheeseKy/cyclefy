@@ -8,7 +8,7 @@ import { ChevronRight } from 'lucide-react';
 
 export default function PostItem() {
   const router = useRouter();
-  const post_type = router.query;
+  const { post_type } = router.query;
   const [PostType, setPostTypeDisplay] = useState('Donation');
   const [PostDescription, setPostDescription] = useState('');
 
@@ -32,6 +32,8 @@ export default function PostItem() {
       }
     }
   }, [post_type]);
+
+  console.log(post_type);
 
   return (
     <div className='flex justify-center py-10 md:py-20'>
