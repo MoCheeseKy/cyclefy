@@ -31,7 +31,7 @@ export default function AddressModal({
 
   const handleSave = () => {
     const payload = {
-      address_name: addressName,
+      addressName: addressName,
       address: address,
     };
     onSave(payload);
