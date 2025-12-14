@@ -8,8 +8,11 @@ import { ChevronsUpDown } from 'lucide-react';
 const sideTabs = [
   { name: 'Donation', value: 'donation', endpoint: '/users/current/donations' },
   { name: 'Barter', value: 'barter', endpoint: '/users/current/barters' },
-  { name: 'Borrowing', value: 'borrow', endpoint: '/users/current/borrows' },
-  { name: 'Borrowing', value: 'borrowing', endpoint: '/users/current/borrows' },
+  {
+    name: 'Borrowing',
+    value: 'borrow' || 'borrowing',
+    endpoint: '/users/current/borrows',
+  },
   { name: 'Recycling', value: 'recycle', endpoint: '/users/current/recycles' },
   { name: 'Repair', value: 'repair', endpoint: '/users/current/repairs' },
 ];
