@@ -12,7 +12,7 @@ import { CheckCircle2 } from 'lucide-react';
 
 export default function SuccessModal({ isOpen, onClose, postType }) {
   const router = useRouter();
-  const historyLink = `/user/histories/${postType}`;
+  const historyLink = `/user/histories/${postType}?history_type=${postType}`;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

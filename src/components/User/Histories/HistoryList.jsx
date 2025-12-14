@@ -145,6 +145,13 @@ export default function HistoryList({ historyType, endpoint }) {
             categories={allCategories}
           />
         );
+      case 'borrowing':
+        return (
+          <BorrowingFilterPopover
+            onApplyFilters={applyFilters}
+            categories={allCategories}
+          />
+        );
       case 'repair':
         return (
           <RepairFilterPopover
