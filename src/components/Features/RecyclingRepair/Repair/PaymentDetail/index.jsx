@@ -113,7 +113,6 @@ export default function RepairPaymentDetail() {
     );
   }
 
-  // PERBAIKAN: Ganti nama `address_id` menjadi `address` dan `phone_id` menjadi `phone` saat destructuring
   const {
     payment,
     item_name,
@@ -123,7 +122,7 @@ export default function RepairPaymentDetail() {
     item_weight,
     repair_location,
     images,
-    address_id: address,
+    address,
     phone_id: phone,
   } = repairData;
 
@@ -149,17 +148,13 @@ export default function RepairPaymentDetail() {
               <h2 className='mb-4 text-xl font-semibold'>My Address</h2>
               <div className='flex items-start justify-between'>
                 <div>
-                  {/* PERBAIKAN: Gunakan `phone.number` langsung, tambahkan optional chaining (?) untuk keamanan */}
-                  <p className='font-bold'>
-                    {payment?.user?.fullname} ({phone?.number})
-                  </p>
                   <p className='mt-1 text-sm text-gray-500'>
                     {address?.address}
                   </p>
                 </div>
-                <Button variant='outline' size='sm'>
+                {/* <Button variant='outline' size='sm'>
                   Change
-                </Button>
+                </Button> */}
               </div>
             </div>
 

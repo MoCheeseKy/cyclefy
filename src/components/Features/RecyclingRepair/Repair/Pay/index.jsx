@@ -38,11 +38,12 @@ const PaymentInstruction = ({ status }) => {
     });
   };
 
+  console.log(status);
+
   switch (status.payment_type) {
     case 'bank_transfer':
       return (
         <div className='p-6 text-center text-white rounded-lg bg-primary'>
-          {/* PERBAIKAN: Tambahkan optional chaining (?) dan fallback value */}
           <p className='font-semibold'>
             {status.bank_code?.toUpperCase() || 'Bank Transfer'}
           </p>
@@ -66,9 +67,9 @@ const PaymentInstruction = ({ status }) => {
         <div className='p-6 text-center text-white bg-gray-800 rounded-lg'>
           <p className='font-semibold'>QRIS</p>
           <div className='p-4 mt-2 bg-white rounded-md'>
-            {status.qr_url ? (
+            {status.qris_url ? (
               <Image
-                src={status.qr_url}
+                src={status?.qris_url}
                 alt='QRIS Code'
                 width={200}
                 height={200}
@@ -78,9 +79,6 @@ const PaymentInstruction = ({ status }) => {
               <p className='text-black'>QR Code not available.</p>
             )}
           </div>
-          <p className='mt-2 text-xs text-gray-400'>
-            NMDI: {status.nmid || 'XXXXXXXXXXXXXXXX'}
-          </p>
         </div>
       );
     case 'ewallet':
@@ -136,7 +134,7 @@ export default function RepairPayNow() {
           description: 'Redirecting to your history...',
         });
         router.replace('/user/histories?history_type=repair');
-        return; // Hentikan eksekusi lebih lanjut
+        return;
       }
 
       setPaymentStatus(statusData);
@@ -202,9 +200,10 @@ export default function RepairPayNow() {
             <p className='text-sm text-gray-500'>
               Due on{' '}
               {format(
-                new Date(paymentStatus.expired_at),
-                'MMMM dd, yyyy, HH:mm'
-              )}
+                new Date(paymentStatus?.expired_at),
+                'dd MMMM yyyy, HH:mm'
+              )}{' '}
+              WIB
             </p>
           </div>
           <div className='flex items-center justify-between my-8 text-lg'>
