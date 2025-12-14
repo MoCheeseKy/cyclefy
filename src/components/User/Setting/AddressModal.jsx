@@ -30,11 +30,7 @@ export default function AddressModal({
   }, [initialValue]);
 
   const handleSave = () => {
-    const payload = {
-      addressName: addressName,
-      address: address,
-    };
-    onSave(payload);
+    onSave({ addressName, address });
     onClose();
   };
 
