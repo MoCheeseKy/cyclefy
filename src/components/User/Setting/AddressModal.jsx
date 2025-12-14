@@ -31,6 +31,7 @@ export default function AddressModal({
 
   const handleSave = () => {
     onSave({ addressName, address });
+    console.log({ addressName, address });
     onClose();
   };
 
